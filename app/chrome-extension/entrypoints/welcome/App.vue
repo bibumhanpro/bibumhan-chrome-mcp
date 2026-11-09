@@ -13,7 +13,7 @@ const BIBUMHAN_VERSION = chrome.runtime.getManifest().version;
 const COMMANDS = {
   // 메인 npm 설치 — postinstall 이 manifest 등록 + extension zip 다운로드 자동 수행
   npmInstall:
-    'npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz',
+    'npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz',
   // Claude Code 에 줄 prompt — 사용자가 [Copy] → 터미널의 Claude Code 에 붙여넣기
   claudePrompt: `지금 working dir (이 프로젝트 폴더) 의 .mcp.json 에 우리 chrome MCP (mcp-chrome-bibumhan) 를 등록해줘. ~/.claude.json 같은 전역 설정에는 손대지 마.
 

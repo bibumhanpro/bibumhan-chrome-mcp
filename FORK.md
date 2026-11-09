@@ -31,7 +31,7 @@ upstream diff → [`UPSTREAM_DIFF.md`](./UPSTREAM_DIFF.md)
 
 ```bash
 # 1. bridge (npm)
-npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
+npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
 
 # 2. extension (Chrome Web Store 사용 안 함 — Releases 의 .zip 사이드로드)
 # https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases 에서 latest .zip 다운로드

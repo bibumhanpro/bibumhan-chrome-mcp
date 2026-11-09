@@ -4,7 +4,7 @@
 > 가이드: https://bibumhan-claudecode-guide.vercel.app · 문의: [비범한사람들 카카오 채널](https://pf.kakao.com/_xcCKCX)
 >
 > ℹ️ ScaleMaker Chrome MCP v1.0.37 을 바탕으로 이름을 모두 **BIBUMHAN** 으로 새로 만든 판입니다. 확장 ID·Native host·포트(**12330**)가 달라서 ScaleMaker 판과 한 PC에 같이 깔려도 서로 부딪히지 않습니다.
-> 설치 파일은 npm 이 아니라 이 저장소의 **GitHub Releases** 에서 받습니다.
+> 설치 파일은 npm 이 아니라 이 저장소의 **GitHub Releases** 에서 받습니다 — **npm 로그인·가입 필요 없음.** 아래 한 줄을 통째로 복사하세요 (`--allow-scripts` 가 빠지면 최신 npm 에서 자동 등록이 건너뛰어집니다).
 
 > [hangwin/mcp-chrome](https://github.com/hangwin/mcp-chrome) 의 reliability fork — 5+ 개월 머지 안 된 핵심 PR 7개 흡수 + Force Reconnect + Diagnostic UI.
 > **stdio transport 강제** (HTTP 12306 안 씀). 웹스토어 등록 안 함 — GitHub Release 사이드로드.
@@ -12,7 +12,7 @@
 ## 한 줄 설치
 
 ```bash
-npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
+npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
 ```
 
 postinstall 이 자동으로 처리하는 것:
@@ -24,7 +24,7 @@ postinstall 이 자동으로 처리하는 것:
 
 > Node.js 20+ 필요 — `node -v` 로 확인. macOS / Windows / Linux 공통.
 >
-> **자동 스킬 설치를 원하지 않으면:** `BIBUMHAN_NO_SKILL=1 npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz`
+> **자동 스킬 설치를 원하지 않으면:** `BIBUMHAN_NO_SKILL=1 npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz`
 > 사용자 custom 스킬 (frontmatter `name` 이 다른 경우) 은 절대 덮어쓰지 않음.
 > 같은 스킬이 이미 있으면 `bibumhan-version` 비교 후 새 버전일 때만 갱신.
 

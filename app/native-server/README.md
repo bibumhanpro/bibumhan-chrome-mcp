@@ -7,7 +7,7 @@ This is the **bibumhan fork** of `mcp-chrome-bridge`, adding Force Reconnect, a 
 ## Install
 
 ```bash
-npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
+npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
 ```
 
 The postinstall step will:

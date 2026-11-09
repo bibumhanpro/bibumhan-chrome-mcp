@@ -17,7 +17,7 @@
 ## Install
 
 ```bash
-npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz   # bridge 가 launcher 도 의존성으로 가져옴
+npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz   # bridge 가 launcher 도 의존성으로 가져옴
 ```
 
 또는 GitHub Releases 에서 OS 별 단일 셸 다운로드.

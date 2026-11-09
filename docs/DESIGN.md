@@ -122,7 +122,7 @@
 - **12307** = Playwright CDP 폴백 (별도 포트, 별도 transport)
 - **9222** = Chrome CDP endpoint (launcher 가 활성화)
 - Playwright 폴백은 bridge 가 살아있는 동안에도 사용자 토글로 강제 전환 가능
-- bridge process = npm 글로벌 패키지, `npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz`
+- bridge process = npm 글로벌 패키지, `npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz`
 
 ---
 
@@ -464,11 +464,11 @@ extension popup → "Open Diagnostic Report" 클릭 → 별창 (`chrome-extensio
 
 ### 배포 방식 매트릭스
 
-| 컴포넌트             | 배포 채널                                                                | 사용자 설치 방법                                                                                                                                           |
-| -------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **bridge** (npm pkg) | npm registry — `mcp-chrome-bibumhan-bridge`                              | `npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz` (원본과 충돌 X, 패키지명 다름) |
-| **extension**        | ❌ Chrome Web Store 사용 안 함 (정책상 fork reject 위험 + 검수 2주 지연) | ✅ GitHub Releases 의 `.zip` → unpacked 사이드로드 (chrome://extensions 개발자모드 ON → 폴더 로드)                                                         |
-| **chrome-launcher**  | GitHub Releases 의 OS별 단일 셸                                          | macOS `.command` 더블클릭 / Windows `.bat` 더블클릭                                                                                                        |
+| 컴포넌트             | 배포 채널                                                                | 사용자 설치 방법                                                                                                                                                                                      |
+| -------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **bridge** (npm pkg) | npm registry — `mcp-chrome-bibumhan-bridge`                              | `npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz` (원본과 충돌 X, 패키지명 다름) |
+| **extension**        | ❌ Chrome Web Store 사용 안 함 (정책상 fork reject 위험 + 검수 2주 지연) | ✅ GitHub Releases 의 `.zip` → unpacked 사이드로드 (chrome://extensions 개발자모드 ON → 폴더 로드)                                                                                                    |
+| **chrome-launcher**  | GitHub Releases 의 OS별 단일 셸                                          | macOS `.command` 더블클릭 / Windows `.bat` 더블클릭                                                                                                                                                   |
 
 → 사용자 1회 셋업 = (1) `npm i -g ...` + (2) GitHub zip 다운로드해서 extension 폴더 로드 + (3) launcher 다운로드. 5분 미만.
 

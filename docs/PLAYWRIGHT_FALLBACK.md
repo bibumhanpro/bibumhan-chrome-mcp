@@ -6,7 +6,7 @@
 
 ```bash
 # 1. bridge 설치
-npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
+npm install -g --allow-scripts=mcp-chrome-bibumhan-bridge https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
 
 # 2. fallback transport 활성화 (env var)
 export MCP_PLAYWRIGHT_FALLBACK=1
