@@ -1,12 +1,12 @@
 {
-  "name": "mcp-chrome-scalemaker-launcher",
+  "name": "mcp-chrome-bibumhan-launcher",
   "version": "1.0.37",
-  "description": "Chrome Launcher with --remote-debugging-port=9222 for mcp-chrome-scalemaker Playwright CDP fallback. Detects default Chrome binary + user-data-dir per OS (macOS/Windows/Linux).",
+  "description": "Chrome Launcher with --remote-debugging-port=9222 for mcp-chrome-bibumhan Playwright CDP fallback. Detects default Chrome binary + user-data-dir per OS (macOS/Windows/Linux).",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "scalemaker-chrome": "./bin/scalemaker-chrome.sh"
+    "bibumhan-chrome": "./bin/bibumhan-chrome.sh"
   },
   "files": [
     "bin",
@@ -26,11 +26,11 @@
     "cdp",
     "launcher"
   ],
-  "author": "scalemaker-ship-it (scalemaker fork)",
+  "author": "bibumhanpro (bibumhan fork)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker.git",
+    "url": "https://github.com/bibumhanpro/bibumhan-chrome-mcp.git",
     "directory": "packages/chrome-launcher"
   },
   "engines": {

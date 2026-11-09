@@ -83,7 +83,7 @@ export class PlaywrightFallbackServer {
 
         const server = new McpServer(
           {
-            name: 'ChromeMcpScalemakerPlaywrightFallback',
+            name: 'ChromeMcpBibumhanPlaywrightFallback',
             version: '1.0.0',
           },
           { capabilities: { tools: {} } },

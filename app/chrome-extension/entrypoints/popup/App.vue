@@ -4,7 +4,7 @@
     <div v-show="currentView === 'home'" class="home-view">
       <div class="header">
         <div class="header-content">
-          <h1 class="header-title">ScaleMaker Chrome Mcp</h1>
+          <h1 class="header-title">BIBUMHAN Chrome Mcp</h1>
         </div>
       </div>
       <div class="content">
@@ -49,11 +49,11 @@
               </div>
             </div>
 
-            <!-- scalemaker fork v1.0.12: "MCP 서버 설정" JSON 박스 제거.
+            <!-- bibumhan fork v1.0.12: "MCP 서버 설정" JSON 박스 제거.
                  Claude prompt 박스가 더 직관적이고, JSON 박스는 사용자가 직접 채워야 하는
                  placeholder (<npm root -g 출력값>) 가 있어서 그냥 복사하면 안 됨 → 혼란만 가중. -->
 
-            <!-- scalemaker fork v1.0.10+: Claude Code 자동 등록 prompt 박스 -->
+            <!-- bibumhan fork v1.0.10+: Claude Code 자동 등록 prompt 박스 -->
             <div v-if="showMcpConfig" class="mcp-config-section">
               <div class="mcp-config-header">
                 <p class="mcp-config-label">⚡ Claude Code 자동 등록 prompt</p>
@@ -93,15 +93,15 @@
               }}</span>
             </button>
 
-            <!-- scalemaker fork: Force Reconnect 5단계 슈퍼버튼 -->
+            <!-- bibumhan fork: Force Reconnect 5단계 슈퍼버튼 -->
             <!-- reconnect 끝나면 popup 의 nativeConnectionStatus 즉시 갱신 -->
             <ForceReconnect
-              :port="Number(nativeServerPort) || 12320"
+              :port="Number(nativeServerPort) || 12330"
               @reconnected="handleReconnected"
             />
 
-            <!-- scalemaker fork: Diagnostic Report + Self-Test -->
-            <Diagnostic :port="Number(nativeServerPort) || 12320" />
+            <!-- bibumhan fork: Diagnostic Report + Self-Test -->
+            <Diagnostic :port="Number(nativeServerPort) || 12330" />
           </div>
         </div>
 
@@ -426,9 +426,9 @@ const runFlow = async (flowId: string) => {
 
 const nativeConnectionStatus = ref<'unknown' | 'connected' | 'disconnected'>('unknown');
 const isConnecting = ref(false);
-const nativeServerPort = ref<number>(12320);
+const nativeServerPort = ref<number>(12330);
 
-// scalemaker fork: 강제포커스 정책 토글. true = MCP 도구가 OS 윈도우 포커스 가로채기 허용.
+// bibumhan fork: 강제포커스 정책 토글. true = MCP 도구가 OS 윈도우 포커스 가로채기 허용.
 // false = Chrome 이 다른 앱 앞으로 안 튀어나옴 (탭 전환·창 생성은 여전히 동작).
 const forceFocusEnabled = ref<boolean>(false);
 
@@ -481,22 +481,22 @@ const showMcpConfig = computed(() => {
   return nativeConnectionStatus.value === 'connected' && serverStatus.value.isRunning;
 });
 
-// scalemaker fork v1.0.12: "MCP 서버 설정" JSON 박스 제거됨. Claude prompt 박스만 표시.
+// bibumhan fork v1.0.12: "MCP 서버 설정" JSON 박스 제거됨. Claude prompt 박스만 표시.
 // mcpConfigJson / copyMcpConfig / copyButtonText 도 함께 제거.
 
-// scalemaker fork v1.0.10: Claude Code 자동 등록 prompt. 사용자가 npm root -g 출력값
+// bibumhan fork v1.0.10: Claude Code 자동 등록 prompt. 사용자가 npm root -g 출력값
 // 직접 채우기 귀찮으니 prompt 한 번 복사 → 터미널의 claude 에 붙여넣기.
 const claudePromptText = computed(() => {
   const port = serverStatus.value.port || nativeServerPort.value;
   return (
     '지금 working dir (이 프로젝트 폴더) 의 .mcp.json 에 우리 chrome MCP ' +
-    '(mcp-chrome-scalemaker) 를 등록해줘. ~/.claude.json 같은 전역 설정에는 ' +
+    '(mcp-chrome-bibumhan) 를 등록해줘. ~/.claude.json 같은 전역 설정에는 ' +
     '손대지 마.\n\n' +
     '규칙:\n' +
     '- 이름: "chrome-mcp-stdio"\n' +
     '- transport: stdio (HTTP 안 씀)\n' +
     '- command: "node"\n' +
-    '- args: ["<npm root -g 출력값>/mcp-chrome-scalemaker-bridge/dist/mcp/mcp-server-stdio.js"]\n' +
+    '- args: ["<npm root -g 출력값>/mcp-chrome-bibumhan-bridge/dist/mcp/mcp-server-stdio.js"]\n' +
     `- env: { "CHROME_PORT": "${port}" }\n\n` +
     '먼저 `npm root -g` 를 bash 로 실행해서 실제 경로 얻고, 그 다음에 working dir 의 .mcp.json ' +
     '(없으면 신설) 의 mcpServers.chrome-mcp-stdio 만 추가/갱신해줘. 기존 다른 server 항목은 ' +
@@ -984,7 +984,7 @@ const checkServerStatus = async () => {
   }
 };
 
-// scalemaker fork v1.0.16: Force Reconnect 5단계 모두 success = 실제 연결됨.
+// bibumhan fork v1.0.16: Force Reconnect 5단계 모두 success = 실제 연결됨.
 // 이전에는 background polling 에 status 의존했는데 background 의 currentServerStatus 가
 // stale 한 케이스에서 popup 이 "연결되지 않음" stuck. force-reconnect 의 진짜 결과를
 // 신뢰해서 popup status 를 직접 강제 set. (background 도 별도로 sync 시도)
@@ -999,7 +999,7 @@ const handleReconnected = async (payload: {
   serverStatus.value = {
     ...serverStatus.value,
     isRunning: true,
-    port: Number(nativeServerPort.value) || 12320,
+    port: Number(nativeServerPort.value) || 12330,
     lastUpdated: Date.now(),
   };
 
@@ -1019,7 +1019,7 @@ const handleReconnected = async (payload: {
       serverStatus.value = {
         ...serverStatus.value,
         isRunning: true,
-        port: Number(nativeServerPort.value) || 12320,
+        port: Number(nativeServerPort.value) || 12330,
         lastUpdated: Date.now(),
       };
     }
@@ -1173,7 +1173,7 @@ const loadPortPreference = async () => {
   }
 };
 
-// scalemaker fork: 강제포커스 토글 — load + toggle handler.
+// bibumhan fork: 강제포커스 토글 — load + toggle handler.
 const loadForceFocusPreference = async () => {
   try {
     forceFocusEnabled.value = await isForceFocusEnabled();
@@ -1577,7 +1577,7 @@ onMounted(async () => {
       try {
         if (area !== 'local') return;
         if (Object.prototype.hasOwnProperty.call(changes || {}, 'rr_flows')) loadFlows();
-        // scalemaker fork: 다른 popup/탭이 force-focus 토글 바꿔도 즉시 반영.
+        // bibumhan fork: 다른 popup/탭이 force-focus 토글 바꿔도 즉시 반영.
         if (Object.prototype.hasOwnProperty.call(changes || {}, FORCE_FOCUS_STORAGE_KEY)) {
           forceFocusEnabled.value = changes[FORCE_FOCUS_STORAGE_KEY]?.newValue === true;
         }
@@ -1629,7 +1629,7 @@ onUnmounted(() => {
   padding-right: 12px;
 }
 
-/* scalemaker fork: 강제 포커스 토글 — iOS 스타일 슬라이딩 스위치 */
+/* bibumhan fork: 강제 포커스 토글 — iOS 스타일 슬라이딩 스위치 */
 .force-focus-switch,
 .force-focus-switch__wrap {
   display: inline-flex;
@@ -2242,7 +2242,7 @@ onUnmounted(() => {
   position: relative;
 }
 
-/* scalemaker fork v1.0.28: 복사 버튼이 prompt 박스 우상단에 떠 있는 형태 */
+/* bibumhan fork v1.0.28: 복사 버튼이 prompt 박스 우상단에 떠 있는 형태 */
 .copy-config-button--floating {
   position: absolute;
   top: 6px;
@@ -2263,7 +2263,7 @@ onUnmounted(() => {
   border-color: var(--ac-accent, #d97757);
 }
 
-/* scalemaker fork v1.0.10: Claude prompt 박스 부가 hint */
+/* bibumhan fork v1.0.10: Claude prompt 박스 부가 hint */
 .claude-prompt-hint {
   font-size: 11px;
   color: #64748b;

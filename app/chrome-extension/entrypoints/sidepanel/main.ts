@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { NativeMessageType } from 'chrome-mcp-scalemaker-shared';
+import { NativeMessageType } from 'chrome-mcp-bibumhan-shared';
 import App from './App.vue';
 
 // Tailwind first, then custom tokens

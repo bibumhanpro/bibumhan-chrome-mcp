@@ -1,7 +1,7 @@
 # strip SQLite/agent + fix Windows postinstall — Design
 
 **Date**: 2026-06-01
-**Author**: scalemaker-ship-it (via Claude Code brainstorming)
+**Author**: bibumhanpro (via Claude Code brainstorming)
 **Status**: ✅ Implemented in v1.0.36 (2026-06-01)
 
 ## 구현 후 정정 사항 (post-implementation note)
@@ -27,12 +27,12 @@ design 의 핵심 결정 (D-1/D-2/D-3) 은 모두 유지. agent chat **기능** 
 | `pnpm-lock.yaml` 에서 `better-sqlite3` / `drizzle-orm` / `@anthropic-ai/claude-agent-sdk` | grep hit 0                                                  |
 | `pnpm build:shared / build:native / build:extension`                                      | 3개 모두 성공                                               |
 | chrome extension chunk 에서 agent-chat 흔적                                               | 0 (useAgentTheme chunk 만 잔존 = design 토큰)               |
-| `pnpm --filter mcp-chrome-scalemaker-bridge test` (jest)                                  | **13/13 pass**                                              |
+| `pnpm --filter mcp-chrome-bibumhan-bridge test` (jest)                                    | **13/13 pass**                                              |
 | 타입 에러 baseline 비교                                                                   | HEAD: 125 → after change: 118 (7 감소, 0 새 에러 introduce) |
 
 ## 1. Problem
 
-### 1-A. `npm i -g mcp-chrome-scalemaker-bridge` 가 Python 설치를 요구한다
+### 1-A. `npm i -g mcp-chrome-bibumhan-bridge` 가 Python 설치를 요구한다
 
 옛날 hangwin 은 안 그랬는데, 우리 fork 부터 (정확히는 **hangwin 의 2025-12-15 commit `704e04d` "feat: add cli agent" 이후 baseline 을 따라간 우리 fork 부터**) Python / VS Build Tools / Xcode CLT 설치를 요구하기 시작.
 
@@ -45,14 +45,14 @@ design 의 핵심 결정 (D-1/D-2/D-3) 은 모두 유지. agent chat **기능** 
 
 세 의존성 모두 **`app/native-server/src/agent/` 하나의 디렉토리에서만 사용**. 우리 fork 의 명시적 타겟 시나리오 (Claude Code → chrome-mcp-stdio → 33 MCP 도구) 에는 전혀 안 쓰임.
 
-### 1-B. Windows 사용자의 `~/Downloads/mcp-chrome-scalemaker-extension-v1.0.X/` 폴더가 비어있다
+### 1-B. Windows 사용자의 `~/Downloads/mcp-chrome-bibumhan-extension-v1.0.X/` 폴더가 비어있다
 
 `app/native-server/src/scripts/postinstall.ts:59-67` 의 Windows extension 다운로드 분기가 silent fail.
 
 ```ts
 await runCmd('powershell', [
   '-Command',
-  `Invoke-WebRequest -Uri "${SCALEMAKER_EXT_URL}" -OutFile "${zipPath}"`,
+  `Invoke-WebRequest -Uri "${BIBUMHAN_EXT_URL}" -OutFile "${zipPath}"`,
 ]);
 ```
 
@@ -64,7 +64,7 @@ await runCmd('powershell', [
 
 ## 2. Goals
 
-1. `npm i -g mcp-chrome-scalemaker-bridge` 가 **Python / VS Build Tools / Xcode CLT 일절 요구하지 않게** 만들기. 옛날 hangwin (2025-12-15 이전) install 경험 복원.
+1. `npm i -g mcp-chrome-bibumhan-bridge` 가 **Python / VS Build Tools / Xcode CLT 일절 요구하지 않게** 만들기. 옛날 hangwin (2025-12-15 이전) install 경험 복원.
 2. Windows postinstall 의 extension 다운로드 단계를 **robust** 하게: 다운로드 실패는 loud failure 로, 빈 폴더 절대 생성 안 함.
 3. 위 두 가지가 우리 fork 의 **명시적 기능 (Force Reconnect, Playwright CDP fallback, Diagnostic UI, MCP 33 도구)** 에 영향 없도록 한다.
 
@@ -111,15 +111,15 @@ app/native-server/src/server/routes/agent.ts   ← HTTP route 통째 삭제
 
 ### 5-3. 기존 사용자의 DB 파일
 
-`~/.mcp-chrome-scalemaker/agent.db` (또는 `agent.sqlite`) 같은 파일이 있을 수 있음. 우리 fork 가 정식 release 안 했으니 dogfood 사용자 대상.
+`~/.mcp-chrome-bibumhan/agent.db` (또는 `agent.sqlite`) 같은 파일이 있을 수 있음. 우리 fork 가 정식 release 안 했으니 dogfood 사용자 대상.
 
 **조치**: postinstall 에서 잔존 DB 파일을 **silent 삭제** (없으면 no-op). 사용자 경고 없이 청소. 데이터 유실 risk 평가 → agent chat 세션 기록 외엔 없으므로 무시 가능.
 
 ```ts
 // postinstall.ts 에 추가
 const legacyDbPaths = [
-  path.join(SCALEMAKER_INSTALL_ROOT, 'agent.db'),
-  path.join(SCALEMAKER_INSTALL_ROOT, 'agent.sqlite'),
+  path.join(BIBUMHAN_INSTALL_ROOT, 'agent.db'),
+  path.join(BIBUMHAN_INSTALL_ROOT, 'agent.sqlite'),
 ];
 for (const p of legacyDbPaths) {
   if (fs.existsSync(p)) fs.unlinkSync(p);
@@ -205,7 +205,7 @@ if (os.platform() === 'win32') {
     [
       `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12`,
       `$ProgressPreference = 'SilentlyContinue'`, // progress bar 가 stdout 점유 차단
-      `Invoke-WebRequest -UseBasicParsing -Uri "${SCALEMAKER_EXT_URL}" -OutFile "${zipPath}"`,
+      `Invoke-WebRequest -UseBasicParsing -Uri "${BIBUMHAN_EXT_URL}" -OutFile "${zipPath}"`,
     ].join('; '),
   ]);
 }
@@ -235,13 +235,13 @@ if (stat.size < 1024) {
 #### Fix-3: 압축 해제 후 파일 카운트 검증
 
 ```ts
-const files = fs.readdirSync(SCALEMAKER_EXT_DIR);
+const files = fs.readdirSync(BIBUMHAN_EXT_DIR);
 if (files.length === 0) {
-  fs.rmdirSync(SCALEMAKER_EXT_DIR);
+  fs.rmdirSync(BIBUMHAN_EXT_DIR);
   throw new Error(`Extension extraction produced empty directory — zip may be corrupt`);
 }
 // manifest.json 존재까지 확인 (확장 zip 의 필수 파일)
-const manifestPath = path.join(SCALEMAKER_EXT_DIR, 'manifest.json');
+const manifestPath = path.join(BIBUMHAN_EXT_DIR, 'manifest.json');
 if (!fs.existsSync(manifestPath)) {
   throw new Error(`Extension zip extracted but manifest.json missing — corrupt zip`);
 }
@@ -255,9 +255,9 @@ if (!fs.existsSync(manifestPath)) {
 catch (e) {
   console.log(colorText(`\n❌ Extension auto-download failed: ${(e as Error).message}`, 'red'));
   console.log(colorText(`\n수동 다운로드:`, 'yellow'));
-  console.log(`  1) ${SCALEMAKER_EXT_URL}`);
+  console.log(`  1) ${BIBUMHAN_EXT_URL}`);
   console.log(`  2) 다운받은 zip 을 다음 폴더에 압축 해제:`);
-  console.log(colorText(`     ${SCALEMAKER_EXT_DIR}`, 'green'));
+  console.log(colorText(`     ${BIBUMHAN_EXT_DIR}`, 'green'));
   console.log(`  3) chrome://extensions → Developer mode ON → Load unpacked → 그 폴더 선택`);
   return null;
 }
@@ -277,7 +277,7 @@ curl 기반 macOS/Linux 분기에도 같은 robustness 추가:
 | Claude Code + MCP 도구만 쓰는 사용자 (= primary user) | ✅ 영향 없음. install 경험 ↑↑↑.                          | 그냥 `npm i -g` 새로 받기만 하면 됨.                                                     |
 | sidepanel 의 agent-chat 을 모르고 있던 사용자         | 영향 없음 (못 봤으니까)                                  | 없음                                                                                     |
 | sidepanel 의 agent-chat 을 실제로 쓰던 사용자         | 🟡 **기능 사라짐**. sidepanel 열어도 agent chat 탭 없음. | hangwin upstream (`hangwin/mcp-chrome` 1.0.29+) 으로 가야 함. README 에 안내 한 줄 추가. |
-| `~/.mcp-chrome-scalemaker/agent.db` 가 있는 사용자    | 🟢 silent 삭제. 잃을 것은 chat 세션 기록뿐.              | 없음                                                                                     |
+| `~/.mcp-chrome-bibumhan/agent.db` 가 있는 사용자      | 🟢 silent 삭제. 잃을 것은 chat 세션 기록뿐.              | 없음                                                                                     |
 
 ## 9. Verification
 
@@ -285,35 +285,35 @@ curl 기반 macOS/Linux 분기에도 같은 robustness 추가:
 
 3개 환경에서 clean install:
 
-| OS                 | Node        | 검증 명령                               | 기대 결과                                                                                             |
-| ------------------ | ----------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| macOS arm64        | 24.x (최신) | `npm i -g mcp-chrome-scalemaker-bridge` | Python 안 묻고 완료. native 모듈 컴파일 0                                                             |
-| Windows 11 x64     | 22.x LTS    | `npm i -g mcp-chrome-scalemaker-bridge` | Python 안 묻고 완료. `~/Downloads/mcp-chrome-scalemaker-extension-v*/` 에 manifest.json 포함 ~95 파일 |
-| Linux Ubuntu 22.04 | 20.x LTS    | `npm i -g mcp-chrome-scalemaker-bridge` | Python 안 묻고 완료                                                                                   |
+| OS                 | Node        | 검증 명령                             | 기대 결과                                                                                           |
+| ------------------ | ----------- | ------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| macOS arm64        | 24.x (최신) | `npm i -g mcp-chrome-bibumhan-bridge` | Python 안 묻고 완료. native 모듈 컴파일 0                                                           |
+| Windows 11 x64     | 22.x LTS    | `npm i -g mcp-chrome-bibumhan-bridge` | Python 안 묻고 완료. `~/Downloads/mcp-chrome-bibumhan-extension-v*/` 에 manifest.json 포함 ~95 파일 |
+| Linux Ubuntu 22.04 | 20.x LTS    | `npm i -g mcp-chrome-bibumhan-bridge` | Python 안 묻고 완료                                                                                 |
 
 **Python 묻는지 어떻게 알지?**: install 출력에 `node-gyp`, `python`, `gyp ERR!`, `Microsoft Visual C++ Build Tools` 단어가 등장하면 fail. `npm install --loglevel=verbose 2>&1 | grep -iE "python|node-gyp|gyp"` 에 hit 없으면 pass.
 
 ### 9-2. 기능 회귀 검증
 
-| 기능                                            | 검증 방법                                                                             |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- |
-| MCP 33 도구 (navigate, click, screenshot, etc.) | `pnpm --filter mcp-chrome-scalemaker-bridge test` (jest) — 기존 13개 테스트 통과 유지 |
-| Force Reconnect 5단계                           | popup → "강제 재연결" 버튼 → 정상 reconnect                                           |
-| Playwright CDP 폴백                             | 환경변수로 native 끄고 playwright 활성, MCP 도구 호출 가능                            |
-| Diagnostic Report                               | popup → 진단 리포트 → 4 stage 모두 ✓                                                  |
-| sidepanel                                       | workflows, element-markers 탭만 보임. agent-chat 흔적 0                               |
-| popup                                           | 빨간/노란/녹색 status. sidepanel 여는 버튼 (있다면) workflows/element-markers 만      |
-| welcome                                         | "Claude Code 등록 prompt" 박스 정상. 색감 변경 없음 (Claude design tokens)            |
+| 기능                                            | 검증 방법                                                                           |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------- |
+| MCP 33 도구 (navigate, click, screenshot, etc.) | `pnpm --filter mcp-chrome-bibumhan-bridge test` (jest) — 기존 13개 테스트 통과 유지 |
+| Force Reconnect 5단계                           | popup → "강제 재연결" 버튼 → 정상 reconnect                                         |
+| Playwright CDP 폴백                             | 환경변수로 native 끄고 playwright 활성, MCP 도구 호출 가능                          |
+| Diagnostic Report                               | popup → 진단 리포트 → 4 stage 모두 ✓                                                |
+| sidepanel                                       | workflows, element-markers 탭만 보임. agent-chat 흔적 0                             |
+| popup                                           | 빨간/노란/녹색 status. sidepanel 여는 버튼 (있다면) workflows/element-markers 만    |
+| welcome                                         | "Claude Code 등록 prompt" 박스 정상. 색감 변경 없음 (Claude design tokens)          |
 
 ### 9-3. Windows postinstall 회귀
 
-수동: Windows 11 머신에서 `npm i -g mcp-chrome-scalemaker-bridge` → 다음 확인:
+수동: Windows 11 머신에서 `npm i -g mcp-chrome-bibumhan-bridge` → 다음 확인:
 
-- `~/Downloads/mcp-chrome-scalemaker-extension-v1.0.36/` 안에 `manifest.json`, `background.js`, `assets/` 등 다 있음
+- `~/Downloads/mcp-chrome-bibumhan-extension-v1.0.36/` 안에 `manifest.json`, `background.js`, `assets/` 등 다 있음
 - `agent-chat-*.css` 는 없음 (= scope 2 결과)
 - `VERSION` 파일 정상 작성
 
-다운로드 실패 시뮬레이션: `SCALEMAKER_EXT_URL` 을 invalid URL 로 임시 변경 → loud error + manual fallback 안내 출력 + 빈 폴더 생성 안 됨.
+다운로드 실패 시뮬레이션: `BIBUMHAN_EXT_URL` 을 invalid URL 로 임시 변경 → loud error + manual fallback 안내 출력 + 빈 폴더 생성 안 됨.
 
 ## 10. Risks / Tradeoffs
 
@@ -326,7 +326,7 @@ curl 기반 macOS/Linux 분기에도 같은 robustness 추가:
 
 ## 11. Versioning
 
-- 다음 release: **`scalemaker-v1.0.36`**.
+- 다음 release: **`bibumhan-v1.0.36`**.
 - `package.json` 의 모든 version field 일괄 bump (1.0.35 → 1.0.36).
 - release note 의 강조 포인트:
   - "🐍 Python install prompt 영구 제거 (better-sqlite3 의존성 삭제)"
@@ -335,7 +335,7 @@ curl 기반 macOS/Linux 분기에도 같은 robustness 추가:
 
 ## 12. Implementation order
 
-1. **branch 분기**: `main-scalemaker` 에서 worktree 따고 작업 (using-git-worktrees 스킬)
+1. **branch 분기**: `main` 에서 worktree 따고 작업 (using-git-worktrees 스킬)
 2. **Scope 1** (native-server agent 제거) — clean. typecheck + jest 통과 확인.
 3. **Scope 2** (chrome-extension agent-chat 제거) — typecheck + `pnpm build:extension` 통과 확인.
 4. **Scope 3** (Windows postinstall fix) — 빌드 확인. Windows VM 또는 GitHub Actions windows runner 로 verify.

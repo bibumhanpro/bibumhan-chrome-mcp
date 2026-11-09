@@ -137,7 +137,7 @@ export abstract class BaseBrowserToolExecutor implements ToolExecutor {
    * Optionally focus window and/or activate tab. Defaults preserve current behavior
    * when caller sets activate/focus flags explicitly.
    *
-   * scalemaker fork: focusWindow 는 popup 의 "강제 포커스" 토글 정책을 통과한 경우에만 실제로
+   * bibumhan fork: focusWindow 는 popup 의 "강제 포커스" 토글 정책을 통과한 경우에만 실제로
    * windows.update({focused:true}) 호출. tab.update({active:true}) 는 정책 영향 받지 않음
    * (탭 활성화는 도구 동작에 필수).
    */

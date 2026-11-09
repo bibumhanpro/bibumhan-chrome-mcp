@@ -3,52 +3,52 @@
 > **비범한사람들 클로드코드 실무 과정**에서 쓰는 크롬 자동화 MCP입니다. 클로드코드가 내 크롬 창을 직접 열고·클릭하고·캡처합니다.
 > 가이드: https://bibumhan-claudecode-guide.vercel.app · 문의: [비범한사람들 카카오 채널](https://pf.kakao.com/_xcCKCX)
 >
-> ℹ️ 설치 패키지·확장 프로그램의 내부 이름은 호환을 위해 `mcp-chrome-scalemaker` 그대로 씁니다 (같은 코드, 같은 설치 명령).
-
+> ℹ️ ScaleMaker Chrome MCP v1.0.37 을 바탕으로 이름을 모두 **BIBUMHAN** 으로 새로 만든 판입니다. 확장 ID·Native host·포트(**12330**)가 달라서 ScaleMaker 판과 한 PC에 같이 깔려도 서로 부딪히지 않습니다.
+> 설치 파일은 npm 이 아니라 이 저장소의 **GitHub Releases** 에서 받습니다.
 
 > [hangwin/mcp-chrome](https://github.com/hangwin/mcp-chrome) 의 reliability fork — 5+ 개월 머지 안 된 핵심 PR 7개 흡수 + Force Reconnect + Diagnostic UI.
-> **stdio transport 강제** (HTTP 12306 안 씀). 웹스토어 등록 안 함 — npm + GitHub Release 사이드로드.
+> **stdio transport 강제** (HTTP 12306 안 씀). 웹스토어 등록 안 함 — GitHub Release 사이드로드.
 
 ## 한 줄 설치
 
 ```bash
-npm install -g mcp-chrome-scalemaker-bridge
+npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
 ```
 
 postinstall 이 자동으로 처리하는 것:
 
 - ✅ Bridge 전역 설치
-- ✅ Native Messaging manifest 등록 (`com.chromemcpscalemaker.nativehost`)
-- ✅ Extension zip 다운로드 → `~/Downloads/mcp-chrome-scalemaker-extension-v<version>/`
-- ✅ **Claude Code 가 설치된 경우** (`~/.claude/` 존재 시) troubleshooting 스킬도 자동 설치 → `~/.claude/skills/chrome-mcp-scalemaker-doctor/SKILL.md`. 이후 "MCP 안 돼" 한 마디로 Claude 가 자동 진단·복구.
+- ✅ Native Messaging manifest 등록 (`com.chromemcpbibumhan.nativehost`)
+- ✅ Extension zip 다운로드 → `~/Downloads/mcp-chrome-bibumhan-extension-v<version>/`
+- ✅ **Claude Code 가 설치된 경우** (`~/.claude/` 존재 시) troubleshooting 스킬도 자동 설치 → `~/.claude/skills/chrome-mcp-bibumhan-doctor/SKILL.md`. 이후 "MCP 안 돼" 한 마디로 Claude 가 자동 진단·복구.
 
 > Node.js 20+ 필요 — `node -v` 로 확인. macOS / Windows / Linux 공통.
 >
-> **자동 스킬 설치를 원하지 않으면:** `SCALEMAKER_NO_SKILL=1 npm install -g mcp-chrome-scalemaker-bridge`
+> **자동 스킬 설치를 원하지 않으면:** `BIBUMHAN_NO_SKILL=1 npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz`
 > 사용자 custom 스킬 (frontmatter `name` 이 다른 경우) 은 절대 덮어쓰지 않음.
-> 같은 스킬이 이미 있으면 `scalemaker-version` 비교 후 새 버전일 때만 갱신.
+> 같은 스킬이 이미 있으면 `bibumhan-version` 비교 후 새 버전일 때만 갱신.
 
 ## 남은 단계 — 2개
 
 ### 1. Chrome 확장 로드
 
-`chrome://extensions` 열기 → 우측 상단 **Developer mode** ON → **"Load unpacked"** 클릭 → `~/Downloads/mcp-chrome-scalemaker-extension-v<version>/` 선택.
+`chrome://extensions` 열기 → 우측 상단 **Developer mode** ON → **"Load unpacked"** 클릭 → `~/Downloads/mcp-chrome-bibumhan-extension-v<version>/` 선택.
 
-Extension ID = `aogfhfajjknomcnmlkbjmihjbknlhbbi` (모든 사용자 동일 — `manifest.key` 박제로 unpacked load 시에도 `allowed_origins` 자동 일치).
+Extension ID = `jcefkfpcolbkdbpgbgohgmdhkkknfhbn` (모든 사용자 동일 — `manifest.key` 박제로 unpacked load 시에도 `allowed_origins` 자동 일치).
 
 ### 2. Claude Code 에 등록
 
 아래 prompt 를 복사 → 터미널의 `claude` 에 붙여넣기. Claude Code 가 `.mcp.json` 에 `chrome-mcp-stdio` 자동 등록.
 
 ```
-지금 working dir (이 프로젝트 폴더) 의 .mcp.json 에 우리 chrome MCP (mcp-chrome-scalemaker) 를 등록해줘. ~/.claude.json 같은 전역 설정에는 손대지 마.
+지금 working dir (이 프로젝트 폴더) 의 .mcp.json 에 우리 chrome MCP (mcp-chrome-bibumhan) 를 등록해줘. ~/.claude.json 같은 전역 설정에는 손대지 마.
 
 규칙:
 - 이름: "chrome-mcp-stdio"
 - transport: stdio (HTTP 안 씀)
 - command: "node"
-- args: ["<npm root -g 출력값>/mcp-chrome-scalemaker-bridge/dist/mcp/mcp-server-stdio.js"]
-- env: { "CHROME_PORT": "12320" }
+- args: ["<npm root -g 출력값>/mcp-chrome-bibumhan-bridge/dist/mcp/mcp-server-stdio.js"]
+- env: { "CHROME_PORT": "12330" }
 
 먼저 `npm root -g` 를 bash 로 실행해서 실제 경로 얻고, 그 다음에 working dir 의 .mcp.json (없으면 신설) 의 mcpServers.chrome-mcp-stdio 만 추가/갱신해줘. 기존 다른 server 항목은 보존.
 
@@ -107,21 +107,21 @@ Extension ID = `aogfhfajjknomcnmlkbjmihjbknlhbbi` (모든 사용자 동일 — `
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | **⚡ 강제 재연결** 5단계 슈퍼버튼                    | drain → port free → spawn → handshake → MCP ping 자동. 사용자 `pkill` 수동 작업 0                      |
 | **🔬 진단 리포트** + Self-Test                       | env / bridge process / Self-Test 5 케이스 / Copy as JSON                                               |
-| **deterministic extension ID** (`manifest.key` 박제) | 모든 사용자 ID = `aogfhfajjknomcnmlkbjmihjbknlhbbi` → unpacked load 시에도 `allowed_origins` 자동 일치 |
+| **deterministic extension ID** (`manifest.key` 박제) | 모든 사용자 ID = `jcefkfpcolbkdbpgbgohgmdhkkknfhbn` → unpacked load 시에도 `allowed_origins` 자동 일치 |
 | **stdio 강제 정책**                                  | HTTP 12306 안 씀. native messaging 기반 stdio 만                                                       |
 | **Claude design tokens** (warm cream + coral)        | popup UI = Anthropic Claude 디자인 시스템                                                              |
 | **한국어 patch**                                     | popup 의 UI 텍스트 한국어 (단축 도구·관리 메뉴 등 잡 기능은 제거)                                      |
 
-(옵션) **Chrome Launcher + Playwright CDP 폴백** — `scalemaker-chrome` CLI 가 Chrome 을 `--remote-debugging-port=9222` 로 띄움. native messaging 끊겨도 CDP attach 로 도구 미러. 일반 사용엔 불필요.
+(옵션) **Chrome Launcher + Playwright CDP 폴백** — `bibumhan-chrome` CLI 가 Chrome 을 `--remote-debugging-port=9222` 로 띄움. native messaging 끊겨도 CDP attach 로 도구 미러. 일반 사용엔 불필요.
 
 ## 진단 / 트러블슈팅
 
 설치가 꼬였다면:
 
 ```bash
-mcp-chrome-scalemaker-bridge doctor          # 상태 점검
-mcp-chrome-scalemaker-bridge doctor --fix    # 자동 복구
-mcp-chrome-scalemaker-bridge report --copy   # 진단 리포트 (이슈 등록용)
+mcp-chrome-bibumhan-bridge doctor          # 상태 점검
+mcp-chrome-bibumhan-bridge doctor --fix    # 자동 복구
+mcp-chrome-bibumhan-bridge report --copy   # 진단 리포트 (이슈 등록용)
 ```
 
 ## Upstream sync

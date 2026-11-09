@@ -7,13 +7,13 @@ import { spawn } from 'child_process';
 import { COMMAND_NAME, EXTENSION_ID } from './constant';
 import { colorText, tryRegisterUserLevelHost, writeNodePathFile } from './utils';
 
-// scalemaker fork: extension zip 자동 다운로드
-// - 앱 런타임 상태 (cdp-port 등) 는 ~/.mcp-chrome-scalemaker/ 에 유지
+// bibumhan fork: extension zip 자동 다운로드
+// - 앱 런타임 상태 (cdp-port 등) 는 ~/.mcp-chrome-bibumhan/ 에 유지
 // - 사용자가 Finder 에서 직접 찾아야 하는 extension 폴더는 ~/Downloads/ 에 둠
 // - v1.0.20: 폴더명에 버전 박제 — 업데이트 시 구버전과 한눈에 구분 + 사용자가
 //   chrome://extensions 의 "Load unpacked" 경로를 갱신해야 한다는 시그널.
-const SCALEMAKER_INSTALL_ROOT = path.join(os.homedir(), '.mcp-chrome-scalemaker');
-function readScalemakerVersion(): string {
+const BIBUMHAN_INSTALL_ROOT = path.join(os.homedir(), '.mcp-chrome-bibumhan');
+function readBibumhanVersion(): string {
   try {
     const pkgPath = path.join(__dirname, '..', '..', 'package.json');
     return JSON.parse(fs.readFileSync(pkgPath, 'utf-8')).version as string;
@@ -21,14 +21,14 @@ function readScalemakerVersion(): string {
     return 'unknown';
   }
 }
-const SCALEMAKER_VERSION = readScalemakerVersion();
-const SCALEMAKER_EXT_DIR = path.join(
+const BIBUMHAN_VERSION = readBibumhanVersion();
+const BIBUMHAN_EXT_DIR = path.join(
   os.homedir(),
   'Downloads',
-  `mcp-chrome-scalemaker-extension-v${SCALEMAKER_VERSION}`,
+  `mcp-chrome-bibumhan-extension-v${BIBUMHAN_VERSION}`,
 );
-const SCALEMAKER_EXT_URL =
-  'https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker/releases/latest/download/chrome-mcp-scalemaker-extension.zip';
+const BIBUMHAN_EXT_URL =
+  'https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/chrome-mcp-bibumhan-extension.zip';
 
 function runCmd(cmd: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -48,11 +48,11 @@ function runCmd(cmd: string, args: string[]): Promise<void> {
  */
 function removeLegacyAgentDb(): void {
   const legacyDbPaths = [
-    path.join(SCALEMAKER_INSTALL_ROOT, 'agent.db'),
-    path.join(SCALEMAKER_INSTALL_ROOT, 'agent.sqlite'),
-    path.join(SCALEMAKER_INSTALL_ROOT, 'agent.db-journal'),
-    path.join(SCALEMAKER_INSTALL_ROOT, 'agent.db-wal'),
-    path.join(SCALEMAKER_INSTALL_ROOT, 'agent.db-shm'),
+    path.join(BIBUMHAN_INSTALL_ROOT, 'agent.db'),
+    path.join(BIBUMHAN_INSTALL_ROOT, 'agent.sqlite'),
+    path.join(BIBUMHAN_INSTALL_ROOT, 'agent.db-journal'),
+    path.join(BIBUMHAN_INSTALL_ROOT, 'agent.db-wal'),
+    path.join(BIBUMHAN_INSTALL_ROOT, 'agent.db-shm'),
   ];
   for (const p of legacyDbPaths) {
     try {
@@ -67,16 +67,16 @@ function removeLegacyAgentDb(): void {
 }
 
 async function downloadAndExtractExtension(): Promise<string | null> {
-  if (process.env.SCALEMAKER_SKIP_EXTENSION_DOWNLOAD === '1') {
+  if (process.env.BIBUMHAN_SKIP_EXTENSION_DOWNLOAD === '1') {
     console.log(
-      colorText('Skipping extension download (SCALEMAKER_SKIP_EXTENSION_DOWNLOAD=1)', 'yellow'),
+      colorText('Skipping extension download (BIBUMHAN_SKIP_EXTENSION_DOWNLOAD=1)', 'yellow'),
     );
     return null;
   }
 
-  fs.mkdirSync(SCALEMAKER_INSTALL_ROOT, { recursive: true });
-  fs.mkdirSync(path.dirname(SCALEMAKER_EXT_DIR), { recursive: true });
-  const zipPath = path.join(SCALEMAKER_INSTALL_ROOT, 'extension.zip');
+  fs.mkdirSync(BIBUMHAN_INSTALL_ROOT, { recursive: true });
+  fs.mkdirSync(path.dirname(BIBUMHAN_EXT_DIR), { recursive: true });
+  const zipPath = path.join(BIBUMHAN_INSTALL_ROOT, 'extension.zip');
 
   console.log(colorText(`Downloading extension from GitHub Release…`, 'blue'));
   try {
@@ -91,7 +91,7 @@ async function downloadAndExtractExtension(): Promise<string | null> {
       const psCommand = [
         `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12`,
         `$ProgressPreference = 'SilentlyContinue'`,
-        `Invoke-WebRequest -UseBasicParsing -Uri "${SCALEMAKER_EXT_URL}" -OutFile "${zipPath}"`,
+        `Invoke-WebRequest -UseBasicParsing -Uri "${BIBUMHAN_EXT_URL}" -OutFile "${zipPath}"`,
       ].join('; ');
       await runCmd('powershell', [
         '-NoProfile',
@@ -101,7 +101,7 @@ async function downloadAndExtractExtension(): Promise<string | null> {
         psCommand,
       ]);
     } else {
-      await runCmd('curl', ['-fsSL', SCALEMAKER_EXT_URL, '-o', zipPath]);
+      await runCmd('curl', ['-fsSL', BIBUMHAN_EXT_URL, '-o', zipPath]);
     }
 
     // v1.0.36: download size 검증. 정상 extension zip 은 5-15MB.
@@ -124,23 +124,23 @@ async function downloadAndExtractExtension(): Promise<string | null> {
 
   // 압축 해제
   try {
-    fs.rmSync(SCALEMAKER_EXT_DIR, { recursive: true, force: true });
-    fs.mkdirSync(SCALEMAKER_EXT_DIR, { recursive: true });
+    fs.rmSync(BIBUMHAN_EXT_DIR, { recursive: true, force: true });
+    fs.mkdirSync(BIBUMHAN_EXT_DIR, { recursive: true });
     if (os.platform() === 'win32') {
       // Windows 10+ 의 내장 tar 사용 (zip 도 처리 가능)
-      await runCmd('tar', ['-xf', zipPath, '-C', SCALEMAKER_EXT_DIR]);
+      await runCmd('tar', ['-xf', zipPath, '-C', BIBUMHAN_EXT_DIR]);
     } else {
-      await runCmd('unzip', ['-q', '-o', zipPath, '-d', SCALEMAKER_EXT_DIR]);
+      await runCmd('unzip', ['-q', '-o', zipPath, '-d', BIBUMHAN_EXT_DIR]);
     }
     fs.unlinkSync(zipPath);
 
     // v1.0.36: 압축 해제 검증 — manifest.json 존재 = chrome extension 의 필수 파일.
     // 빈 폴더 / 손상된 zip / 잘못된 zip 차단.
-    const manifestPath = path.join(SCALEMAKER_EXT_DIR, 'manifest.json');
+    const manifestPath = path.join(BIBUMHAN_EXT_DIR, 'manifest.json');
     if (!fs.existsSync(manifestPath)) {
-      const fileCount = fs.readdirSync(SCALEMAKER_EXT_DIR).length;
+      const fileCount = fs.readdirSync(BIBUMHAN_EXT_DIR).length;
       try {
-        fs.rmSync(SCALEMAKER_EXT_DIR, { recursive: true, force: true });
+        fs.rmSync(BIBUMHAN_EXT_DIR, { recursive: true, force: true });
       } catch {
         /* ignore */
       }
@@ -151,20 +151,20 @@ async function downloadAndExtractExtension(): Promise<string | null> {
 
     // v1.0.6: Finder 에서 폴더 들어왔을 때 한눈에 버전 보이게 VERSION 파일 작성.
     try {
-      const versionLine = `mcp-chrome-scalemaker v${SCALEMAKER_VERSION}\n`;
+      const versionLine = `mcp-chrome-bibumhan v${BIBUMHAN_VERSION}\n`;
       const buildLine = `Installed: ${new Date().toISOString()}\n`;
-      const releaseLine = `Release: https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker/releases/tag/scalemaker-v${SCALEMAKER_VERSION}\n`;
+      const releaseLine = `Release: https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/tag/bibumhan-v${BIBUMHAN_VERSION}\n`;
       const extIdLine = `Extension ID: ${EXTENSION_ID}\n`;
       fs.writeFileSync(
-        path.join(SCALEMAKER_EXT_DIR, 'VERSION'),
+        path.join(BIBUMHAN_EXT_DIR, 'VERSION'),
         versionLine + buildLine + releaseLine + extIdLine,
       );
     } catch {
       // VERSION 파일 fail 해도 install 자체는 OK — silent
     }
 
-    console.log(colorText(`✓ Extension extracted to ${SCALEMAKER_EXT_DIR}`, 'green'));
-    return SCALEMAKER_EXT_DIR;
+    console.log(colorText(`✓ Extension extracted to ${BIBUMHAN_EXT_DIR}`, 'green'));
+    return BIBUMHAN_EXT_DIR;
   } catch (e) {
     printDownloadFailureGuide(`extract failed: ${(e as Error).message}`);
     return null;
@@ -180,15 +180,15 @@ function printDownloadFailureGuide(errorMessage: string): void {
   console.log(colorText(`\n❌ Extension auto-download/extract failed: ${errorMessage}`, 'red'));
   console.log(colorText(`\n수동 설치 절차:`, 'yellow'));
   console.log(`  [1] 브라우저에서 latest release 의 extension zip 다운로드:`);
-  console.log(colorText(`      ${SCALEMAKER_EXT_URL}`, 'blue'));
+  console.log(colorText(`      ${BIBUMHAN_EXT_URL}`, 'blue'));
   console.log(`  [2] 다운받은 zip 을 다음 폴더에 압축 해제:`);
-  console.log(colorText(`      ${SCALEMAKER_EXT_DIR}`, 'green'));
+  console.log(colorText(`      ${BIBUMHAN_EXT_DIR}`, 'green'));
   console.log(`  [3] chrome://extensions 열기 → Developer mode ON → "Load unpacked"`);
   console.log(`      → [2] 의 폴더 선택`);
 }
 
-function printScalemakerNextSteps(extDir: string | null): void {
-  console.log('\n' + colorText('===== mcp-chrome-scalemaker — 설치 완료 =====', 'green'));
+function printBibumhanNextSteps(extDir: string | null): void {
+  console.log('\n' + colorText('===== mcp-chrome-bibumhan — 설치 완료 =====', 'green'));
   if (extDir) {
     console.log('\n' + colorText('[1] Chrome 확장 로드:', 'blue'));
     console.log(`    chrome://extensions → Developer mode ON → "Load unpacked"`);
@@ -196,7 +196,7 @@ function printScalemakerNextSteps(extDir: string | null): void {
     console.log(`    → 자동 ID = ${EXTENSION_ID} (manifest.key 박제 효과)`);
   } else {
     console.log('\n' + colorText('[1] Extension 자동 다운로드 실패 — 수동 다운로드:', 'yellow'));
-    console.log(`    https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker/releases/latest`);
+    console.log(`    https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest`);
   }
 
   console.log(
@@ -204,10 +204,10 @@ function printScalemakerNextSteps(extDir: string | null): void {
   );
   console.log(`    ┌────────────────────────────────────────────────────────────────────┐`);
   console.log(`    지금 working dir (이 프로젝트 폴더) 의 .mcp.json 에 우리 chrome MCP`);
-  console.log(`    (mcp-chrome-scalemaker) 를 등록해줘. ~/.claude.json 같은 전역 설정엔`);
+  console.log(`    (mcp-chrome-bibumhan) 를 등록해줘. ~/.claude.json 같은 전역 설정엔`);
   console.log(`    손대지 마. 이름 "chrome-mcp-stdio", command "node", args ["<npm root -g>`);
-  console.log(`    /mcp-chrome-scalemaker-bridge/dist/mcp/mcp-server-stdio.js"], env`);
-  console.log(`    { "CHROME_PORT": "12320" }. 먼저 \`npm root -g\` 실행해서 경로 얻고,`);
+  console.log(`    /mcp-chrome-bibumhan-bridge/dist/mcp/mcp-server-stdio.js"], env`);
+  console.log(`    { "CHROME_PORT": "12330" }. 먼저 \`npm root -g\` 실행해서 경로 얻고,`);
   console.log(`    working dir 의 .mcp.json mcpServers.chrome-mcp-stdio 만 추가/갱신.`);
   console.log(`    기존 다른 server 항목 보존. 끝나면 /mcp 로 활성 확인 안내.`);
   console.log(`    └────────────────────────────────────────────────────────────────────┘`);
@@ -487,18 +487,18 @@ function printManualInstructions(): void {
  * Main entry — postinstall orchestrator.
  */
 /**
- * scalemaker fork v1.0.30+: Claude Code troubleshooting 스킬 자동 설치.
+ * bibumhan fork v1.0.30+: Claude Code troubleshooting 스킬 자동 설치.
  *
  * 정책:
  * - ~/.claude/ 가 없으면 (= Claude Code 미설치 사용자) skip
- * - SCALEMAKER_NO_SKILL=1 env 면 opt-out
- * - 이미 같은 name (chrome-mcp-scalemaker-doctor) 의 SKILL.md 있으면 scalemaker-version
+ * - BIBUMHAN_NO_SKILL=1 env 면 opt-out
+ * - 이미 같은 name (chrome-mcp-bibumhan-doctor) 의 SKILL.md 있으면 bibumhan-version
  *   비교 — 같으면 skip, 다르면 조용히 overwrite
  * - 다른 name (사용자 custom 스킬) 이 같은 경로면 절대 덮지 않음
  */
 function installClaudeCodeSkill(): void {
-  if (process.env.SCALEMAKER_NO_SKILL === '1') {
-    console.log(colorText('[skill] SCALEMAKER_NO_SKILL=1 — skipping skill install', 'yellow'));
+  if (process.env.BIBUMHAN_NO_SKILL === '1') {
+    console.log(colorText('[skill] BIBUMHAN_NO_SKILL=1 — skipping skill install', 'yellow'));
     return;
   }
 
@@ -514,7 +514,7 @@ function installClaudeCodeSkill(): void {
     return;
   }
 
-  const skillDir = path.join(claudeRoot, 'skills', 'chrome-mcp-scalemaker-doctor');
+  const skillDir = path.join(claudeRoot, 'skills', 'chrome-mcp-bibumhan-doctor');
   const skillDest = path.join(skillDir, 'SKILL.md');
 
   // 기존 파일 있으면 안전성 점검
@@ -522,7 +522,7 @@ function installClaudeCodeSkill(): void {
     try {
       const existing = fs.readFileSync(skillDest, 'utf8');
       const nameMatch = existing.match(/^name:\s*(\S+)/m);
-      if (nameMatch && nameMatch[1] !== 'chrome-mcp-scalemaker-doctor') {
+      if (nameMatch && nameMatch[1] !== 'chrome-mcp-bibumhan-doctor') {
         console.log(
           colorText(
             `[skill] 기존 SKILL 의 name='${nameMatch[1]}' (custom) — 절대 덮지 않음: ${skillDest}`,
@@ -531,9 +531,9 @@ function installClaudeCodeSkill(): void {
         );
         return;
       }
-      const existingVersion = existing.match(/^# scalemaker-version:\s*(\S+)/m)?.[1];
+      const existingVersion = existing.match(/^# bibumhan-version:\s*(\S+)/m)?.[1];
       const newSource = fs.readFileSync(skillSource, 'utf8');
-      const newVersion = newSource.match(/^# scalemaker-version:\s*(\S+)/m)?.[1];
+      const newVersion = newSource.match(/^# bibumhan-version:\s*(\S+)/m)?.[1];
       if (existingVersion && newVersion && existingVersion === newVersion) {
         console.log(colorText(`[skill] 이미 최신 (v${existingVersion}) — skip`, 'blue'));
         return;
@@ -582,11 +582,11 @@ async function main(): Promise<void> {
     // v1.0.36: agent chat 제거 → 잔존 sqlite DB 파일 청소 (있을 경우만)
     removeLegacyAgentDb();
     await tryRegisterNativeHost();
-    // scalemaker fork: extension zip 자동 다운로드 + 압축 해제
+    // bibumhan fork: extension zip 자동 다운로드 + 압축 해제
     const extDir = await downloadAndExtractExtension();
-    // scalemaker fork v1.0.30+: Claude Code troubleshooting 스킬 자동 설치
+    // bibumhan fork v1.0.30+: Claude Code troubleshooting 스킬 자동 설치
     installClaudeCodeSkill();
-    printScalemakerNextSteps(extDir);
+    printBibumhanNextSteps(extDir);
   } else {
     console.log(colorText('Local installation detected', 'yellow'));
     printManualInstructions();

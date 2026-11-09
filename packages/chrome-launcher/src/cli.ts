@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * CLI entrypoint — `scalemaker-chrome` 명령.
+ * CLI entrypoint — `bibumhan-chrome` 명령.
  *
  * 사용:
- *   scalemaker-chrome                    # default 9222, auto-detect 모든 것
- *   scalemaker-chrome --port=9222
- *   scalemaker-chrome --start-url=https://example.com
- *   scalemaker-chrome --binary=/path/to/chrome  --user-data-dir=/path
- *   scalemaker-chrome --verbose
+ *   bibumhan-chrome                    # default 9222, auto-detect 모든 것
+ *   bibumhan-chrome --port=9222
+ *   bibumhan-chrome --start-url=https://example.com
+ *   bibumhan-chrome --binary=/path/to/chrome  --user-data-dir=/path
+ *   bibumhan-chrome --verbose
  */
 import { launchChrome } from './launch.js';
 
@@ -31,7 +31,7 @@ async function main() {
   const verbose = Boolean(args.verbose);
 
   if (args.help || args.h) {
-    console.log(`scalemaker-chrome — Chrome launcher with CDP enabled
+    console.log(`bibumhan-chrome — Chrome launcher with CDP enabled
 
 Options:
   --port=N           CDP debugging port (default 9222, auto-escalation to 9223+)
@@ -42,7 +42,7 @@ Options:
   --help, -h         Show this help
 
 Outputs:
-  ~/.mcp-chrome-scalemaker/cdp-port  → active CDP port (consumed by bridge)
+  ~/.mcp-chrome-bibumhan/cdp-port  → active CDP port (consumed by bridge)
 `);
     process.exit(0);
   }

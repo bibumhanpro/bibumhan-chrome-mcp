@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
-# mcp-chrome-scalemaker — one-liner installer
+# mcp-chrome-bibumhan — one-liner installer
 #
 # 사용:
-#   curl -fsSL https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker/raw/main-scalemaker/install.sh | bash
+#   curl -fsSL https://github.com/bibumhanpro/bibumhan-chrome-mcp/raw/main/install.sh | bash
 #
 # 동작:
 #   1. bridge .tgz 다운로드 → npm i -g (postinstall 자동 native messaging manifest 등록)
-#   2. extension .zip 다운로드 → ~/Downloads/mcp-chrome-scalemaker-extension/ 압축 해제
+#   2. extension .zip 다운로드 → ~/Downloads/mcp-chrome-bibumhan-extension/ 압축 해제
 #   3. Claude Code 의 ~/.mcp.json 또는 working-dir .mcp.json 에 chrome-mcp-stdio 등록 안내
 #   4. chrome://extensions Load unpacked 안내
 
 set -euo pipefail
 
-REPO="scalemaker-ship-it/mcp-chrome-scalemaker"
-RELEASE_TAG="${SCALEMAKER_TAG:-scalemaker-v1.0.15}"
-BRIDGE_TGZ="mcp-chrome-scalemaker-bridge-1.0.15.tgz"
-EXT_ZIP="chrome-mcp-scalemaker-extension.zip"
-INSTALL_ROOT="${SCALEMAKER_INSTALL_ROOT:-$HOME/.mcp-chrome-scalemaker}"
-EXTENSION_DIR="${SCALEMAKER_EXTENSION_DIR:-$HOME/Downloads/mcp-chrome-scalemaker-extension}"
+REPO="bibumhanpro/bibumhan-chrome-mcp"
+RELEASE_TAG="${BIBUMHAN_TAG:-bibumhan-v1.0.15}"
+BRIDGE_TGZ="mcp-chrome-bibumhan-bridge-1.0.15.tgz"
+EXT_ZIP="chrome-mcp-bibumhan-extension.zip"
+INSTALL_ROOT="${BIBUMHAN_INSTALL_ROOT:-$HOME/.mcp-chrome-bibumhan}"
+EXTENSION_DIR="${BIBUMHAN_EXTENSION_DIR:-$HOME/Downloads/mcp-chrome-bibumhan-extension}"
 
 C_GREEN='\033[0;32m'
 C_BLUE='\033[0;34m'
@@ -31,7 +31,7 @@ ok()   { echo -e "${C_GREEN}✅${C_RESET} $*"; }
 warn() { echo -e "${C_YELLOW}⚠️${C_RESET}  $*"; }
 err()  { echo -e "${C_RED}❌${C_RESET} $*" >&2; }
 
-echo -e "${C_BOLD}mcp-chrome-scalemaker installer${C_RESET}"
+echo -e "${C_BOLD}mcp-chrome-bibumhan installer${C_RESET}"
 echo -e "release: ${RELEASE_TAG}"
 echo -e "install root: ${INSTALL_ROOT}"
 echo ""
@@ -88,21 +88,21 @@ ok "extension 파일 $(find "$EXTENSION_DIR" -type f | wc -l | tr -d ' ') 개"
 rm -f "$INSTALL_ROOT/$BRIDGE_TGZ" "$INSTALL_ROOT/$EXT_ZIP"
 
 # ---------- 6. verify bridge + manifest ----------
-if command -v mcp-chrome-scalemaker-bridge >/dev/null 2>&1; then
-  ok "mcp-chrome-scalemaker-bridge CLI 활성"
+if command -v mcp-chrome-bibumhan-bridge >/dev/null 2>&1; then
+  ok "mcp-chrome-bibumhan-bridge CLI 활성"
 else
-  warn "PATH 에 mcp-chrome-scalemaker-bridge 없음 — npm global bin 경로 확인 필요"
+  warn "PATH 에 mcp-chrome-bibumhan-bridge 없음 — npm global bin 경로 확인 필요"
 fi
 
 MANIFEST_DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
 if [ "$(uname)" = "Linux" ]; then
   MANIFEST_DIR="$HOME/.config/google-chrome/NativeMessagingHosts"
 fi
-MANIFEST="$MANIFEST_DIR/com.chromemcpscalemaker.nativehost.json"
+MANIFEST="$MANIFEST_DIR/com.chromemcpbibumhan.nativehost.json"
 if [ -f "$MANIFEST" ]; then
   ok "native messaging manifest 등록됨: $MANIFEST"
 else
-  warn "manifest 없음 — 수동 등록 필요: mcp-chrome-scalemaker-bridge register --force"
+  warn "manifest 없음 — 수동 등록 필요: mcp-chrome-bibumhan-bridge register --force"
 fi
 
 # ---------- 7. chrome://extensions 안내 ----------
@@ -121,13 +121,13 @@ cat <<EOF
   "chrome-mcp-stdio": {
     "command": "node",
     "args": [
-      "$(npm root -g)/mcp-chrome-scalemaker-bridge/dist/mcp/mcp-server-stdio.js"
+      "$(npm root -g)/mcp-chrome-bibumhan-bridge/dist/mcp/mcp-server-stdio.js"
     ],
-    "env": { "CHROME_PORT": "12320" }
+    "env": { "CHROME_PORT": "12330" }
   }
 
 EOF
 echo -e "${C_BOLD}4) Claude Code 재시작${C_RESET} → /mcp 명령으로 chrome-mcp-stdio 활성 확인"
 echo ""
-echo -e "${C_GREEN}Extension ID = aogfhfajjknomcnmlkbjmihjbknlhbbi${C_RESET} (모든 사용자 동일 — manifest.key 박제 효과)"
+echo -e "${C_GREEN}Extension ID = jcefkfpcolbkdbpgbgohgmdhkkknfhbn${C_RESET} (모든 사용자 동일 — manifest.key 박제 효과)"
 echo -e "문제 발생 시: extension popup 의 ⚡ 강제 재연결 또는 🔬 진단 리포트 → Self-Test"

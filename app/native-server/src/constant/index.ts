@@ -9,7 +9,7 @@ export enum NATIVE_MESSAGE_TYPE {
 }
 
 // v1.0.2 부터 fork 전용 포트 — upstream (12306) 과 분리.
-export const NATIVE_SERVER_PORT = 12320;
+export const NATIVE_SERVER_PORT = 12330;
 
 // Timeout constants (in milliseconds)
 export const TIMEOUTS = {

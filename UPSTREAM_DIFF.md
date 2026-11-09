@@ -1,4 +1,4 @@
-# Upstream Diff — mcp-chrome-scalemaker vs hangwin/mcp-chrome
+# Upstream Diff — mcp-chrome-bibumhan vs hangwin/mcp-chrome
 
 **Last sync**: 2026-05-25 (fork 생성일)
 **Baseline commit**: `f48e71751e00bc09725c7e173423cff4f2ccd12a` (upstream master @ Merge PR #272)
@@ -31,14 +31,14 @@
 
 ## 신규 패키지 명명
 
-| 컴포넌트              | upstream 이름                | fork 이름                                                              |
-| --------------------- | ---------------------------- | ---------------------------------------------------------------------- |
-| monorepo root         | `mcp-chrome-bridge-monorepo` | `mcp-chrome-scalemaker-monorepo`                                       |
-| native server npm pkg | `mcp-chrome-bridge`          | `mcp-chrome-scalemaker-bridge`                                         |
-| extension             | `chrome-mcp-server`          | `chrome-mcp-scalemaker`                                                |
-| shared                | `chrome-mcp-shared`          | `chrome-mcp-scalemaker-shared` (rename — npm publish 위해 unique name) |
-| wasm-simd             | `@chrome-mcp/wasm-simd`      | `@chrome-mcp/wasm-simd` (변경 X)                                       |
-| 신규                  | —                            | `mcp-chrome-scalemaker-launcher`                                       |
+| 컴포넌트              | upstream 이름                | fork 이름                                                            |
+| --------------------- | ---------------------------- | -------------------------------------------------------------------- |
+| monorepo root         | `mcp-chrome-bridge-monorepo` | `mcp-chrome-bibumhan-monorepo`                                       |
+| native server npm pkg | `mcp-chrome-bridge`          | `mcp-chrome-bibumhan-bridge`                                         |
+| extension             | `chrome-mcp-server`          | `chrome-mcp-bibumhan`                                                |
+| shared                | `chrome-mcp-shared`          | `chrome-mcp-bibumhan-shared` (rename — npm publish 위해 unique name) |
+| wasm-simd             | `@chrome-mcp/wasm-simd`      | `@chrome-mcp/wasm-simd` (변경 X)                                     |
+| 신규                  | —                            | `mcp-chrome-bibumhan-launcher`                                       |
 
 ## upstream 의도적 제거 (fork divergence)
 
@@ -50,9 +50,9 @@ upstream 과의 sync 정책: 위 영역의 변경은 **흡수 안 함**. agent �
 
 ## 동기화 로그
 
-| 일자       | upstream SHA | 작업                                                                                                                                                                                              | 비고                                                                                                                                        |
-| ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-05-25 | `f48e717`    | fork 생성, baseline 박제                                                                                                                                                                          | 초기                                                                                                                                        |
-| 2026-05-25 | `f48e717`    | 7 PR 흡수 완료 (#346, #338 partial, #312, #302, #329, #313 / #304 = #302 superset 으로 skip)                                                                                                      | Phase 1 L1 baseline. full build (shared+native+extension) 모두 통과                                                                         |
-| 2026-05-25 | `f48e717`    | **scalemaker-v1.0.0 release** — L1~L5 모두 완료, Phase 6 final validation 통과                                                                                                                    | jest 13/13 통과, build native+extension+launcher 모두 OK, CI workflows ready                                                                |
-| 2026-06-01 | `f48e717`    | **scalemaker-v1.0.36** — upstream `704e04d` (cli-agent) 통째 제거. `better-sqlite3`/`drizzle-orm`/`@anthropic-ai/claude-agent-sdk` 제거 → Python 요구 영구 소멸. Windows postinstall 빈 폴더 fix. | jest 13/13, build (native + extension) 통과. 자세한 설계 → `docs/plans/2026-06-01-strip-sqlite-agent-and-fix-windows-postinstall-design.md` |
+| 일자       | upstream SHA | 작업                                                                                                                                                                                            | 비고                                                                                                                                        |
+| ---------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05-25 | `f48e717`    | fork 생성, baseline 박제                                                                                                                                                                        | 초기                                                                                                                                        |
+| 2026-05-25 | `f48e717`    | 7 PR 흡수 완료 (#346, #338 partial, #312, #302, #329, #313 / #304 = #302 superset 으로 skip)                                                                                                    | Phase 1 L1 baseline. full build (shared+native+extension) 모두 통과                                                                         |
+| 2026-05-25 | `f48e717`    | **bibumhan-v1.0.0 release** — L1~L5 모두 완료, Phase 6 final validation 통과                                                                                                                    | jest 13/13 통과, build native+extension+launcher 모두 OK, CI workflows ready                                                                |
+| 2026-06-01 | `f48e717`    | **bibumhan-v1.0.36** — upstream `704e04d` (cli-agent) 통째 제거. `better-sqlite3`/`drizzle-orm`/`@anthropic-ai/claude-agent-sdk` 제거 → Python 요구 영구 소멸. Windows postinstall 빈 폴더 fix. | jest 13/13, build (native + extension) 통과. 자세한 설계 → `docs/plans/2026-06-01-strip-sqlite-agent-and-fix-windows-postinstall-design.md` |

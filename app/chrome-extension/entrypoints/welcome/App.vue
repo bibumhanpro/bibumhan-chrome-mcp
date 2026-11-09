@@ -4,24 +4,25 @@ import { ref } from 'vue';
 // agent-theme 디자인 토큰 시스템 (v1.0.36 chat UI 제거됐으나 CSS 변수는 유지)
 import '../sidepanel/styles/agent-chat.css';
 
-// scalemaker fork: 두 설치 경로별 next-step 분리
+// bibumhan fork: 두 설치 경로별 next-step 분리
 // (A) npm 자동 설치자: bridge + manifest + extension zip 까지 자동
 // (B) zip 수동 설치자: extension 만 받은 상태 → bridge 따로 깔아야 함
-// v1.0.20: extension 폴더명에 버전 박제 — postinstall.ts 의 SCALEMAKER_EXT_DIR 과 동일 규약.
+// v1.0.20: extension 폴더명에 버전 박제 — postinstall.ts 의 BIBUMHAN_EXT_DIR 과 동일 규약.
 //   manifest 의 version 을 직접 읽어 어긋남 방지.
-const SCALEMAKER_VERSION = chrome.runtime.getManifest().version;
+const BIBUMHAN_VERSION = chrome.runtime.getManifest().version;
 const COMMANDS = {
   // 메인 npm 설치 — postinstall 이 manifest 등록 + extension zip 다운로드 자동 수행
-  npmInstall: 'npm install -g mcp-chrome-scalemaker-bridge',
+  npmInstall:
+    'npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz',
   // Claude Code 에 줄 prompt — 사용자가 [Copy] → 터미널의 Claude Code 에 붙여넣기
-  claudePrompt: `지금 working dir (이 프로젝트 폴더) 의 .mcp.json 에 우리 chrome MCP (mcp-chrome-scalemaker) 를 등록해줘. ~/.claude.json 같은 전역 설정에는 손대지 마.
+  claudePrompt: `지금 working dir (이 프로젝트 폴더) 의 .mcp.json 에 우리 chrome MCP (mcp-chrome-bibumhan) 를 등록해줘. ~/.claude.json 같은 전역 설정에는 손대지 마.
 
 규칙:
 - 이름: "chrome-mcp-stdio"
 - transport: stdio (HTTP 안 씀)
 - command: "node"
-- args: ["<npm root -g 출력값>/mcp-chrome-scalemaker-bridge/dist/mcp/mcp-server-stdio.js"]
-- env: { "CHROME_PORT": "12320" }
+- args: ["<npm root -g 출력값>/mcp-chrome-bibumhan-bridge/dist/mcp/mcp-server-stdio.js"]
+- env: { "CHROME_PORT": "12330" }
 
 먼저 \`npm root -g\` 를 bash 로 실행해서 실제 경로 얻고, 그 다음에 working dir 의 .mcp.json (없으면 신설) 의 mcpServers.chrome-mcp-stdio 만 추가/갱신해줘. 기존 다른 server 항목은 보존.
 
@@ -32,13 +33,13 @@ const COMMANDS = {
   // v1.0.30+: troubleshooting 스킬은 postinstall 이 자동 설치 (~/.claude/ 가 있을 때만).
   // 별도 install prompt 박스 불필요.
   // GitHub repo
-  repoUrl: 'https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker',
+  repoUrl: 'https://github.com/bibumhanpro/bibumhan-chrome-mcp',
   // 우리 fork extension ID (deterministic)
-  extensionId: 'aogfhfajjknomcnmlkbjmihjbknlhbbi',
+  extensionId: 'jcefkfpcolbkdbpgbgohgmdhkkknfhbn',
   // chrome://extensions URL — 가시화용
   chromeExtensions: 'chrome://extensions',
   // 수동 설치자가 Load unpacked 할 경로 (npm 설치자도 동일)
-  extensionPath: `~/Downloads/mcp-chrome-scalemaker-extension-v${SCALEMAKER_VERSION}/`,
+  extensionPath: `~/Downloads/mcp-chrome-bibumhan-extension-v${BIBUMHAN_VERSION}/`,
 } as const;
 
 type CommandKey = keyof typeof COMMANDS;
@@ -98,7 +99,7 @@ async function copyCommand(key: CommandKey): Promise<void> {
             </div>
             <div class="min-w-0">
               <h1 class="welcome-title text-lg font-medium tracking-tight truncate">
-                ScaleMaker Chrome Mcp
+                BIBUMHAN Chrome Mcp
               </h1>
               <p class="welcome-muted text-sm truncate"> 확장 설치 후 남은 마지막 단계입니다. </p>
             </div>
@@ -147,7 +148,8 @@ async function copyCommand(key: CommandKey): Promise<void> {
             </h2>
             <p class="welcome-muted text-sm mt-2">
               <code class="welcome-code welcome-code-inline px-1 py-0.5"
-                >npm install -g mcp-chrome-scalemaker-bridge</code
+                >npm install -g
+                https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz</code
               >
               가 postinstall 에서 자동으로 처리한 것:
             </p>
@@ -156,7 +158,7 @@ async function copyCommand(key: CommandKey): Promise<void> {
               <li>✅ Bridge 전역 설치</li>
               <li
                 >✅ Native Messaging manifest 등록 (<code class="welcome-code"
-                  >com.chromemcpscalemaker.nativehost</code
+                  >com.chromemcpbibumhan.nativehost</code
                 >)</li
               >
               <li
@@ -211,7 +213,7 @@ async function copyCommand(key: CommandKey): Promise<void> {
               <p class="welcome-subtle text-xs mt-4">
                 troubleshooting 스킬 (
                 <code class="welcome-code welcome-code-inline px-1 py-0.5"
-                  >~/.claude/skills/chrome-mcp-scalemaker-doctor/</code
+                  >~/.claude/skills/chrome-mcp-bibumhan-doctor/</code
                 >
                 ) 도 npm 설치 시 자동 등록됩니다. 이후 "MCP 안 돼" 한 마디로 자동 진단·복구.
               </p>
@@ -258,7 +260,7 @@ async function copyCommand(key: CommandKey): Promise<void> {
                     <p class="welcome-subtle text-xs mt-2">
                       postinstall 이 자동으로 manifest 등록 +
                       <code class="welcome-code welcome-code-inline px-1 py-0.5"
-                        >com.chromemcpscalemaker.nativehost.json</code
+                        >com.chromemcpbibumhan.nativehost.json</code
                       >
                       배치. Node.js 20+ 필요 —
                       <code class="welcome-code welcome-code-inline px-1 py-0.5">node -v</code> 로
@@ -306,7 +308,7 @@ async function copyCommand(key: CommandKey): Promise<void> {
               <p class="welcome-subtle text-xs mt-4">
                 troubleshooting 스킬 (
                 <code class="welcome-code welcome-code-inline px-1 py-0.5"
-                  >~/.claude/skills/chrome-mcp-scalemaker-doctor/</code
+                  >~/.claude/skills/chrome-mcp-bibumhan-doctor/</code
                 >
                 ) 도 step 1 의 npm 설치 시 자동 등록됩니다. 이후 "MCP 안 돼" 한 마디로 자동
                 진단·복구.

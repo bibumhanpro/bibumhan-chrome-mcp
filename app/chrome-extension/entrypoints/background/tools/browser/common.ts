@@ -1,6 +1,6 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_NAMES } from 'chrome-mcp-bibumhan-shared';
 import { captureFrameOnAction, isAutoCaptureActive } from './gif-recorder';
 import { focusWindowIfAllowed, isForceFocusEnabled } from '@/utils/focus-policy';
 
@@ -298,7 +298,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
         console.log('Opening URL in a new window.');
 
         // Create new window
-        // scalemaker fork: 강제포커스 정책 OFF 면 항상 background. background 인자가 명시적으로
+        // bibumhan fork: 강제포커스 정책 OFF 면 항상 background. background 인자가 명시적으로
         // true 인 경우도 동일.
         const allowFocus = background === true ? false : await isForceFocusEnabled();
         const newWindow = await chrome.windows.create({
@@ -357,7 +357,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
             active: background === true ? false : true,
           });
           if (background !== true) {
-            // scalemaker fork: 강제포커스 정책 통과 시에만 OS 윈도우 포커스.
+            // bibumhan fork: 강제포커스 정책 통과 시에만 OS 윈도우 포커스.
             await focusWindowIfAllowed(targetWindow.id);
           }
 
@@ -390,7 +390,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
           // Fall back to opening in a new window
           console.warn('No last focused window found, falling back to creating a new window.');
 
-          // scalemaker fork: 강제포커스 정책 OFF 면 background 윈도우로 생성.
+          // bibumhan fork: 강제포커스 정책 OFF 면 background 윈도우로 생성.
           const allowFocus = await isForceFocusEnabled();
           const fallbackWindow = await chrome.windows.create({
             url: url,
@@ -647,7 +647,7 @@ class SwitchTabTool extends BaseBrowserToolExecutor {
     console.log(`Attempting to switch to tab ID: ${tabId} in window ID: ${windowId}`);
 
     try {
-      // scalemaker fork: switch_tab 호출이어도 OS 포커스는 정책 게이트 통과 시에만.
+      // bibumhan fork: switch_tab 호출이어도 OS 포커스는 정책 게이트 통과 시에만.
       if (windowId !== undefined) {
         await focusWindowIfAllowed(windowId);
       }

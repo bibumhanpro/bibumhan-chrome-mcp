@@ -143,7 +143,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { TOOL_NAMES } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_NAMES } from 'chrome-mcp-bibumhan-shared';
 import { STORAGE_KEYS } from '@/common/constants';
 
 type ListItem = {

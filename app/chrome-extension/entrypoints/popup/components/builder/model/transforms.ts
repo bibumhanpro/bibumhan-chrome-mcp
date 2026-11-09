@@ -7,9 +7,9 @@ import {
   nodesToSteps as sharedNodesToSteps,
   stepsToNodes as sharedStepsToNodes,
   topoOrder as sharedTopoOrder,
-} from 'chrome-mcp-scalemaker-shared';
-import { STEP_TYPES } from 'chrome-mcp-scalemaker-shared';
-import { EDGE_LABELS } from 'chrome-mcp-scalemaker-shared';
+} from 'chrome-mcp-bibumhan-shared';
+import { STEP_TYPES } from 'chrome-mcp-bibumhan-shared';
+import { EDGE_LABELS } from 'chrome-mcp-bibumhan-shared';
 
 export function newId(prefix: string) {
   return `${prefix}_${Math.random().toString(36).slice(2, 8)}`;

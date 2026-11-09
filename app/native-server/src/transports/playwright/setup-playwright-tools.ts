@@ -6,14 +6,14 @@ import {
   ListPromptsRequestSchema,
   type CallToolResult,
 } from '@modelcontextprotocol/sdk/types.js';
-import { TOOL_SCHEMAS } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_SCHEMAS } from 'chrome-mcp-bibumhan-shared';
 import { attachCdp, isCdpAttached } from './cdp-client.js';
 import { TOOL_REGISTRY } from './tool-registry.js';
 
 /**
  * Playwright fallback transport — MCP Server 에 tools 를 등록.
  *
- * 동일 TOOL_SCHEMAS (chrome-mcp-scalemaker-shared) 노출 (클라이언트 입장에서는 transport 무관 동일 API).
+ * 동일 TOOL_SCHEMAS (chrome-mcp-bibumhan-shared) 노출 (클라이언트 입장에서는 transport 무관 동일 API).
  * 실제 dispatch 는 TOOL_REGISTRY 의 handler — stub 인 경우 isError + 안내 메시지.
  */
 export const setupPlaywrightTools = (server: Server): void => {
@@ -70,7 +70,7 @@ const dispatchTool = async (
           type: 'text',
           text:
             `Playwright CDP attach failed: ${e?.message || e}\n` +
-            `Hint: run \`scalemaker-chrome\` first to launch Chrome with --remote-debugging-port=9222.`,
+            `Hint: run \`bibumhan-chrome\` first to launch Chrome with --remote-debugging-port=9222.`,
         },
       ],
       isError: true,

@@ -1,12 +1,12 @@
 {
-  "name": "mcp-chrome-scalemaker-bridge",
+  "name": "mcp-chrome-bibumhan-bridge",
   "version": "1.0.37",
-  "description": "Chrome Native-Messaging host (Node) — scalemaker fork with Force Reconnect + Playwright CDP fallback",
+  "description": "Chrome Native-Messaging host (Node) — bibumhan fork with Force Reconnect + Playwright CDP fallback",
   "main": "dist/index.js",
   "bin": {
-    "mcp-chrome-scalemaker-bridge": "./dist/cli.js",
-    "mcp-chrome-scalemaker-stdio": "./dist/mcp/mcp-server-stdio.js",
-    "scalemaker-install": "./dist/scripts/scalemaker-install.js"
+    "mcp-chrome-bibumhan-bridge": "./dist/cli.js",
+    "mcp-chrome-bibumhan-stdio": "./dist/mcp/mcp-server-stdio.js",
+    "bibumhan-install": "./dist/scripts/bibumhan-install.js"
   },
   "scripts": {
     "dev": "nodemon --watch src --ext ts,js,json --ignore dist/ --exec \"npm run build && npm run register:dev\"",
@@ -32,20 +32,20 @@
     "chrome",
     "browser"
   ],
-  "author": "hangye (upstream), scalemaker-ship-it (scalemaker fork)",
+  "author": "hangye (upstream), bibumhanpro (bibumhan fork)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker.git"
+    "url": "https://github.com/bibumhanpro/bibumhan-chrome-mcp.git"
   },
-  "homepage": "https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker",
+  "homepage": "https://github.com/bibumhanpro/bibumhan-chrome-mcp",
   "dependencies": {
     "@fastify/cors": "^11.0.1",
     "@modelcontextprotocol/sdk": "^1.11.0",
     "@types/node-fetch": "2",
     "chalk": "^5.4.1",
     "chrome-devtools-frontend": "^1.0.1299282",
-    "chrome-mcp-scalemaker-shared": "workspace:*",
+    "chrome-mcp-bibumhan-shared": "workspace:*",
     "commander": "^13.1.0",
     "fastify": "^5.3.2",
     "is-admin": "^4.0.0",

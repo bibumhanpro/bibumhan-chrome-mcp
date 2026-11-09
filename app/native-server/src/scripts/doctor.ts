@@ -26,7 +26,7 @@ import {
 } from './utils';
 import { NATIVE_SERVER_PORT } from '../constant';
 
-const EXPECTED_PORT = 12320;
+const EXPECTED_PORT = 12330;
 const SCHEMA_VERSION = 1;
 // v1.0.37: 옛날 hangwin (2025-10-09 이전, >=14) 의 install 경험을 그대로 복원.
 // 사용자 명시 요청 — engines.node 와 doctor MIN 모두 14 로 통일.
@@ -571,10 +571,10 @@ function resolveFetch(): FetchFn | null {
 }
 
 /**
- * scalemaker fork v1.0.30+: bridge 의 actual listen port 들을 탐색.
+ * bibumhan fork v1.0.30+: bridge 의 actual listen port 들을 탐색.
  *
  * 동작:
- * 1. `ps aux` 로 mcp-chrome-scalemaker-bridge process (`dist/index.js`) 의 pid 들 수집.
+ * 1. `ps aux` 로 mcp-chrome-bibumhan-bridge process (`dist/index.js`) 의 pid 들 수집.
  * 2. 각 pid 에 `lsof -aPi -p <pid>` 호출 → LISTEN 라인의 port 파싱.
  * 3. 그 port 들에 /ping 시도 → 응답 있는 port 만 responsivePorts 에 포함.
  *
@@ -591,9 +591,9 @@ async function probeActiveBridgePorts(): Promise<{
     const psOut = execFileSync('ps', ['-eo', 'pid,command'], { encoding: 'utf8' });
     const pids: number[] = [];
     for (const line of psOut.split('\n')) {
-      // bridge native messaging host 는 `<...>/mcp-chrome-scalemaker-bridge/dist/index.js` 패턴
+      // bridge native messaging host 는 `<...>/mcp-chrome-bibumhan-bridge/dist/index.js` 패턴
       if (
-        line.includes('mcp-chrome-scalemaker-bridge') &&
+        line.includes('mcp-chrome-bibumhan-bridge') &&
         line.includes('/dist/index.js') &&
         !line.includes('grep')
       ) {
@@ -1082,7 +1082,7 @@ export async function collectDoctorReport(options: DoctorOptions): Promise<Docto
         });
 
         // Connectivity check
-        // scalemaker fork v1.0.30+: hardcoded port 만 ping 하면 false WARN 가능 — bridge 가
+        // bibumhan fork v1.0.30+: hardcoded port 만 ping 하면 false WARN 가능 — bridge 가
         // v1.0.19+ dynamic port 로 popup 의 사용자 입력 port 에서 listen 하므로. configured
         // port ping 실패 시 active bridge process 들의 actual listen port 도 같이 점검.
         const pingUrl = new URL('/ping', url);

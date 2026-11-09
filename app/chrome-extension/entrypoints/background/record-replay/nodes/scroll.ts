@@ -1,4 +1,4 @@
-import { TOOL_NAMES } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_NAMES } from 'chrome-mcp-bibumhan-shared';
 import { handleCallTool } from '@/entrypoints/background/tools';
 import type { StepScroll } from '../types';
 import { expandTemplatesDeep } from '../rr-utils';

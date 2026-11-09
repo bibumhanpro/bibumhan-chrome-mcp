@@ -1,6 +1,6 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_NAMES } from 'chrome-mcp-bibumhan-shared';
 import { cdpSessionManager } from '@/utils/cdp-session-manager';
 import { focusWindowIfAllowed } from '@/utils/focus-policy';
 import { NETWORK_FILTERS } from '@/common/constants';
@@ -787,7 +787,7 @@ class NetworkDebuggerStartTool extends BaseBrowserToolExecutor {
         if (existingTabs.length > 0 && existingTabs[0]?.id) {
           tabToOperateOn = existingTabs[0];
           // Ensure window gets focus and tab is truly activated
-          // scalemaker fork: OS 윈도우 포커스는 정책 통과 시에만.
+          // bibumhan fork: OS 윈도우 포커스는 정책 통과 시에만.
           await focusWindowIfAllowed(tabToOperateOn.windowId);
           await chrome.tabs.update(tabToOperateOn.id!, { active: true });
         } else {

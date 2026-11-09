@@ -1,6 +1,6 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_NAMES } from 'chrome-mcp-bibumhan-shared';
 import { TOOL_MESSAGE_TYPES } from '@/common/message-types';
 import { focusWindowIfAllowed } from '@/utils/focus-policy';
 
@@ -86,7 +86,7 @@ class WebFetcherTool extends BaseBrowserToolExecutor {
       }
 
       // Optionally bring tab/window to foreground
-      // scalemaker fork: windows.update({focused:true}) 는 강제포커스 정책 통과 시에만 호출.
+      // bibumhan fork: windows.update({focused:true}) 는 강제포커스 정책 통과 시에만 호출.
       if (!background) {
         await chrome.tabs.update(tab.id, { active: true });
         await focusWindowIfAllowed(tab.windowId);

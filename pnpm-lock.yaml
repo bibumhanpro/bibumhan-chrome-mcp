@@ -74,7 +74,7 @@ importers:
       '@xenova/transformers':
         specifier: ^2.17.2
         version: 2.17.2
-      chrome-mcp-scalemaker-shared:
+      chrome-mcp-bibumhan-shared:
         specifier: workspace:*
         version: link:../../packages/shared
       date-fns:
@@ -159,7 +159,7 @@ importers:
       chrome-devtools-frontend:
         specifier: ^1.0.1299282
         version: 1.0.1632065
-      chrome-mcp-scalemaker-shared:
+      chrome-mcp-bibumhan-shared:
         specifier: workspace:*
         version: link:../../packages/shared
       commander:

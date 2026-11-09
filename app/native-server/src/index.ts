@@ -4,8 +4,8 @@ import nativeMessagingHostInstance from './native-messaging-host';
 import { PlaywrightFallbackServer } from './transports/playwright';
 
 // v1.0.19: bridge dynamic port.
-// 이전 v1.0.5~18 은 spawn 즉시 hardcoded NATIVE_SERVER_PORT(12320) 으로 listen 했음.
-// 그래서 사용자가 popup 에서 다른 port (예: 12310) 입력해도 무시되고 12320 에서만
+// 이전 v1.0.5~18 은 spawn 즉시 hardcoded NATIVE_SERVER_PORT(12330) 으로 listen 했음.
+// 그래서 사용자가 popup 에서 다른 port (예: 12310) 입력해도 무시되고 12330 에서만
 // listen 됐음 → multi-browser / multi-profile 시나리오에서 같은 port race 만 발생.
 //
 // 새 동작:

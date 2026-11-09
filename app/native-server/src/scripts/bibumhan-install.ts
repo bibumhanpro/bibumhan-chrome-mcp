@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * scalemaker-install — mcp-chrome-scalemaker fork 전용 설치 CLI.
+ * bibumhan-install — mcp-chrome-bibumhan fork 전용 설치 CLI.
  *
  * upstream 의 `register` 명령은 unpacked extension ID 를 인자로 받지 않아,
  * fork extension 을 unpacked load 한 사용자가 silent native-messaging 거부에 빠짐.
@@ -12,9 +12,9 @@
  *   4. Chrome / Brave / Edge 등 Chromium 기반 브라우저 다중 등록
  *
  * 사용:
- *   mcp-chrome-scalemaker-bridge scalemaker-install --extension-id <ID> [--browser chrome|brave|edge|all]
+ *   mcp-chrome-bibumhan-bridge bibumhan-install --extension-id <ID> [--browser chrome|brave|edge|all]
  *   또는
- *   scalemaker-install --extension-id <ID>
+ *   bibumhan-install --extension-id <ID>
  */
 import {
   writeFileSync,
@@ -28,7 +28,7 @@ import { homedir, platform } from 'node:os';
 import path from 'node:path';
 
 // v1.0.2 부터 fork 전용 host name — upstream 과 분리.
-const HOST_NAME = 'com.chromemcpscalemaker.nativehost';
+const HOST_NAME = 'com.chromemcpbibumhan.nativehost';
 const UPSTREAM_CHROME_WEB_STORE_ID = 'hbdgbgagpkpjffpklnamcljpakneikee';
 
 interface CliArgs {
@@ -50,13 +50,13 @@ const parseArgs = (argv: string[]): CliArgs => {
 };
 
 const printHelp = () => {
-  console.log(`scalemaker-install — mcp-chrome-scalemaker fork install helper
+  console.log(`bibumhan-install — mcp-chrome-bibumhan fork install helper
 
 사용법:
-  scalemaker-install --extension-id <ID>
-  scalemaker-install --extension-id <ID> --browser chrome
-  scalemaker-install --extension-id <ID> --browser all
-  scalemaker-install --auto-detect-id
+  bibumhan-install --extension-id <ID>
+  bibumhan-install --extension-id <ID> --browser chrome
+  bibumhan-install --extension-id <ID> --browser all
+  bibumhan-install --auto-detect-id
 
 옵션:
   --extension-id <ID>   Chrome 의 unpacked fork extension ID (32자 영문)
@@ -148,7 +148,7 @@ const autoDetectExtensionId = (): string | null => {
         // 우리 fork extension 의 path 특징 = chrome-extension 하위의 chrome-mv3 dir
         if (
           typeof extPath === 'string' &&
-          (extPath.includes('mcp-chrome-scalemaker') || extPath.endsWith('chrome-mv3'))
+          (extPath.includes('mcp-chrome-bibumhan') || extPath.endsWith('chrome-mv3'))
         ) {
           console.log(`  [auto-detect] profile=${profile} → ${id}`);
           return id;
@@ -190,7 +190,7 @@ const main = () => {
   const runHostPath = path.resolve(__dirname, '..', 'run_host.sh');
   if (!existsSync(runHostPath)) {
     console.error(`❌ run_host.sh 를 찾을 수 없습니다: ${runHostPath}`);
-    console.error('   fork 를 빌드했는지 확인: pnpm --filter mcp-chrome-scalemaker-bridge build');
+    console.error('   fork 를 빌드했는지 확인: pnpm --filter mcp-chrome-bibumhan-bridge build');
     process.exit(1);
   }
 
@@ -205,7 +205,7 @@ const main = () => {
   // 4. manifest content
   const manifest = {
     name: HOST_NAME,
-    description: 'Node.js Host for Browser Bridge Extension (mcp-chrome-scalemaker fork)',
+    description: 'Node.js Host for Browser Bridge Extension (mcp-chrome-bibumhan fork)',
     path: runHostPath,
     type: 'stdio',
     allowed_origins: allowedOrigins,
@@ -239,7 +239,7 @@ const main = () => {
 
   // 7. 결과 출력
   console.log('');
-  console.log('🚀 scalemaker-install 결과');
+  console.log('🚀 bibumhan-install 결과');
   console.log('');
   for (const r of results) {
     const icon = r.ok ? '✅' : '❌';
@@ -261,7 +261,7 @@ const main = () => {
   } else {
     console.log('⚠️  extension-id 없이 진행됨 — unpacked fork extension 은 동작 안 할 가능성 큼.');
     console.log('   chrome://extensions 에서 ID 확인 후 재실행:');
-    console.log('   scalemaker-install --extension-id <ID>');
+    console.log('   bibumhan-install --extension-id <ID>');
   }
 };
 

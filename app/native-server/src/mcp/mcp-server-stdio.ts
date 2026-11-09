@@ -9,7 +9,7 @@ import {
   ListResourcesRequestSchema,
   ListPromptsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { TOOL_SCHEMAS } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_SCHEMAS } from 'chrome-mcp-bibumhan-shared';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import * as fs from 'fs';
@@ -21,9 +21,9 @@ let sessionId: string | undefined = undefined;
 let isCleaningUp = false;
 
 // Read configuration from stdio-config.json.
-// scalemaker fork: .mcp.json 에서 전달된 env.CHROME_PORT 가 있으면 hardcoded 12320 을 override.
+// bibumhan fork: .mcp.json 에서 전달된 env.CHROME_PORT 가 있으면 hardcoded 12330 을 override.
 // 이걸 안 하면 같은 머신에서 두 Chrome profile 을 다른 port 로 띄워도 모든 Claude Code 세션이
-// 12320 으로만 요청해서 한 profile 의 extension 만 잡힘 (multi-profile 라우팅 버그).
+// 12330 으로만 요청해서 한 profile 의 extension 만 잡힘 (multi-profile 라우팅 버그).
 const loadConfig = () => {
   try {
     const configPath = path.join(__dirname, 'stdio-config.json');

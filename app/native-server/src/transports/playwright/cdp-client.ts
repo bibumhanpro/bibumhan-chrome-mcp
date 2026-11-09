@@ -2,14 +2,14 @@
  * CDP client wrapper — chromium.connectOverCDP 의 fork 측 manager.
  *
  * 사용자가 chrome-launcher 로 띄운 Chrome (--remote-debugging-port=9222) 에 attach.
- * Port 는 ~/.mcp-chrome-scalemaker/cdp-port 에서 읽음. attach 실패 시 명확한 에러.
+ * Port 는 ~/.mcp-chrome-bibumhan/cdp-port 에서 읽음. attach 실패 시 명확한 에러.
  */
 import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
 import { readFileSync, existsSync } from 'node:fs';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
-const CDP_PORT_FILE = path.join(homedir(), '.mcp-chrome-scalemaker', 'cdp-port');
+const CDP_PORT_FILE = path.join(homedir(), '.mcp-chrome-bibumhan', 'cdp-port');
 
 export interface CdpAttachState {
   browser: Browser;
@@ -58,7 +58,7 @@ export const attachCdp = async (overridePort?: number): Promise<CdpAttachState> 
   const port = overridePort ?? readCdpPortFromFile();
   if (!port) {
     throw new Error(
-      `No CDP port available. Run \`scalemaker-chrome\` first (writes port to ${CDP_PORT_FILE}).`,
+      `No CDP port available. Run \`bibumhan-chrome\` first (writes port to ${CDP_PORT_FILE}).`,
     );
   }
 

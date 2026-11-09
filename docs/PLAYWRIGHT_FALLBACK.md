@@ -6,13 +6,13 @@
 
 ```bash
 # 1. bridge 설치
-npm i -g mcp-chrome-scalemaker-bridge
+npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
 
 # 2. fallback transport 활성화 (env var)
 export MCP_PLAYWRIGHT_FALLBACK=1
 
 # 3. Chrome 을 launcher 로 띄움 (CDP 활성화 + default profile)
-scalemaker-chrome      # ~/.mcp-chrome-scalemaker/cdp-port 에 9222 박제
+bibumhan-chrome      # ~/.mcp-chrome-bibumhan/cdp-port 에 9222 박제
 
 # 4. extension 연결 (popup → Connect)
 # bridge 는 12306 (native) + 12307 (fallback) 두 server 띄움
@@ -24,12 +24,12 @@ claude mcp add --transport http chrome-mcp-fallback http://127.0.0.1:12307/mcp
 ## Architecture
 
 ```
-사용자 Chrome (scalemaker-chrome 로 띄움, --remote-debugging-port=9222)
+사용자 Chrome (bibumhan-chrome 로 띄움, --remote-debugging-port=9222)
        │
        │ CDP (Chrome DevTools Protocol)
        ▼
 ┌──────────────────────────────────────────────────────┐
-│  bridge process (mcp-chrome-scalemaker-bridge)        │
+│  bridge process (mcp-chrome-bibumhan-bridge)        │
 │                                                      │
 │  ┌──────────────┐    ┌──────────────────────────┐    │
 │  │ Primary 12306│    │ Playwright 폴백 12307    │    │
@@ -80,7 +80,7 @@ native messaging path 가 망가질 때 — singleton bug, Chrome 업데이트 �
 
 ## Limitations
 
-- **Chrome must be launched via `scalemaker-chrome`** — 일반 Chrome (--remote-debugging-port 없이 띄운) 에는 attach 불가. 보안상 fact.
+- **Chrome must be launched via `bibumhan-chrome`** — 일반 Chrome (--remote-debugging-port 없이 띄운) 에는 attach 불가. 보안상 fact.
 - **stub 23개** — 후속 PR 에서 점진 구현.
 - **단일 Chrome 인스턴스** — multi-profile 동시 사용은 후속 (issue #347 영역).
 

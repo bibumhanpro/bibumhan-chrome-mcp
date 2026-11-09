@@ -1,4 +1,4 @@
-# mcp-chrome-scalemaker
+# mcp-chrome-bibumhan
 
 > Fork of [hangwin/mcp-chrome](https://github.com/hangwin/mcp-chrome) with reliability fixes + Force Reconnect + Playwright CDP fallback.
 
@@ -31,10 +31,10 @@ upstream diff → [`UPSTREAM_DIFF.md`](./UPSTREAM_DIFF.md)
 
 ```bash
 # 1. bridge (npm)
-npm i -g mcp-chrome-scalemaker-bridge
+npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz
 
 # 2. extension (Chrome Web Store 사용 안 함 — Releases 의 .zip 사이드로드)
-# https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker/releases 에서 latest .zip 다운로드
+# https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases 에서 latest .zip 다운로드
 # chrome://extensions → Developer mode ON → Load unpacked → 폴더 선택
 
 # 3. Chrome Launcher (Playwright 폴백 사용할 때만)

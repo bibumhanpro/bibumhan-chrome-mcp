@@ -1,14 +1,14 @@
-# ScaleMaker Chrome MCP — 설계 문서
+# BIBUMHAN Chrome MCP — 설계 문서
 
 > 작성일: 2026-08-07 · 상태: 구현 착수
-> 한 줄 요약: `mcp-chrome-vibemaker`의 **업데이트 버전**. 이름·확장·명령어를 전부 스케일메이커로 리브랜딩하고, **자동 재연결(무인 self-heal)** 을 얹는다. 안정성은 최소한 vibemaker와 동급이어야 한다.
+> 한 줄 요약: `mcp-chrome-vibemaker`의 **업데이트 버전**. 이름·확장·명령어를 전부 비범한사람들로 리브랜딩하고, **자동 재연결(무인 self-heal)** 을 얹는다. 안정성은 최소한 vibemaker와 동급이어야 한다.
 
 ## 1. 목표 & 제약
 
-- **목표:** vibemaker 포크를 "ScaleMaker Chrome MCP"로 리브랜딩한 **나만의 배포판**. npm 공개 배포 + `scalemaker-ship-it` GitHub 레포.
+- **목표:** vibemaker 포크를 "BIBUMHAN Chrome MCP"로 리브랜딩한 **나만의 배포판**. npm 공개 배포 + `bibumhanpro` GitHub 레포.
 - **핵심 제약:** 리브랜딩하면서 **작동 안정성이 vibemaker보다 나빠지면 안 된다.** 기능은 동결 복제 후 이름만 교체하는 순서로 회귀(regression)를 원천 차단.
-- **소유/배포:** npm(`mcp-chrome-scalemaker-bridge`) 공개 + GitHub `scalemaker-ship-it/mcp-chrome-scalemaker`.
-- **로컬 이관:** 완성 후 사용자 맥에서 vibemaker 제거 → scalemaker 설치.
+- **소유/배포:** npm(`mcp-chrome-bibumhan-bridge`) 공개 + GitHub `bibumhanpro/bibumhan-chrome-mcp`.
+- **로컬 이관:** 완성 후 사용자 맥에서 vibemaker 제거 → bibumhan 설치.
 
 ## 2. 베이스
 
@@ -17,18 +17,18 @@
 
 ## 3. 리브랜딩 매핑
 
-| 항목             | 옛것                                                       | 새것                                                         |
-| ---------------- | ---------------------------------------------------------- | ------------------------------------------------------------ |
-| monorepo         | `mcp-chrome-vibemaker-monorepo`                            | `mcp-chrome-scalemaker-monorepo`                             |
-| 브리지(npm 본체) | `mcp-chrome-vibemaker-bridge`                              | `mcp-chrome-scalemaker-bridge`                               |
-| 확장             | `chrome-mcp-vibemaker`                                     | `chrome-mcp-scalemaker`                                      |
-| shared           | `chrome-mcp-vibemaker-shared`                              | `chrome-mcp-scalemaker-shared`                               |
-| launcher         | `mcp-chrome-vibemaker-launcher`                            | `mcp-chrome-scalemaker-launcher`                             |
-| CLI bin          | `mcp-chrome-vibemaker-bridge`/`-stdio`/`vibemaker-install` | `mcp-chrome-scalemaker-bridge`/`-stdio`/`scalemaker-install` |
-| 네이티브 호스트  | `com.chromemcpvibemaker.nativehost`                        | `com.chromemcpscalemaker.nativehost`                         |
-| 기본 포트        | `12316`                                                    | `12320`                                                      |
-| 확장 ID          | `epadcnnkkmnhalmhlemjlompmggbfjfa`                         | **새 RSA 키로 재생성(고정)**                                 |
-| 텍스트 브랜드    | Vibemaker/VibeMaker                                        | ScaleMaker                                                   |
+| 항목             | 옛것                                                       | 새것                                                     |
+| ---------------- | ---------------------------------------------------------- | -------------------------------------------------------- |
+| monorepo         | `mcp-chrome-vibemaker-monorepo`                            | `mcp-chrome-bibumhan-monorepo`                           |
+| 브리지(npm 본체) | `mcp-chrome-vibemaker-bridge`                              | `mcp-chrome-bibumhan-bridge`                             |
+| 확장             | `chrome-mcp-vibemaker`                                     | `chrome-mcp-bibumhan`                                    |
+| shared           | `chrome-mcp-vibemaker-shared`                              | `chrome-mcp-bibumhan-shared`                             |
+| launcher         | `mcp-chrome-vibemaker-launcher`                            | `mcp-chrome-bibumhan-launcher`                           |
+| CLI bin          | `mcp-chrome-vibemaker-bridge`/`-stdio`/`vibemaker-install` | `mcp-chrome-bibumhan-bridge`/`-stdio`/`bibumhan-install` |
+| 네이티브 호스트  | `com.chromemcpvibemaker.nativehost`                        | `com.chromemcpbibumhan.nativehost`                       |
+| 기본 포트        | `12316`                                                    | `12330`                                                  |
+| 확장 ID          | `epadcnnkkmnhalmhlemjlompmggbfjfa`                         | **새 RSA 키로 재생성(고정)**                             |
+| 텍스트 브랜드    | Vibemaker/VibeMaker                                        | BIBUMHAN                                                 |
 
 - **완전 분리 원칙:** 포트·확장ID·호스트명을 전부 다르게 → 제거 이관 중 vibemaker와 안 엉킴.
 - **잔재 0건:** `vibemaker`, `12316`, `chromemcpvibemaker`, 옛 확장ID를 grep 0건까지 훑음.
@@ -38,7 +38,7 @@
 
 vibemaker의 **수동** Force Reconnect는 폴백으로 유지하고, 그 위에 **무인 복구** 루프를 얹는다.
 
-- **heartbeat:** 확장 background가 브리지(12320)에 주기적 핑. 기본 5초.
+- **heartbeat:** 확장 background가 브리지(12330)에 주기적 핑. 기본 5초.
 - **끊김 감지:** 연속 3회 실패 시 "끊김" 판정.
 - **자동 복구:** 지수 백오프(2→4→8…초, 상한 30초)로 재연결 재시도. 성공 시 원복.
 - **상태 뱃지:** 팝업 🟢연결 / 🟡복구중 / 🔴실패 실시간 표시.

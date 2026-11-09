@@ -1,4 +1,4 @@
-# Regression Cases — mcp-chrome-scalemaker
+# Regression Cases — mcp-chrome-bibumhan
 
 > `docs/DESIGN.md` §3 의 회귀 8 케이스 자동화 진행 상황과 사용자 환경 검증 방법.
 
@@ -59,6 +59,6 @@ curl -X POST http://127.0.0.1:12306/mcp \
 # 두 session id 모두 살아있어야 함 (factory pattern 검증)
 
 # 8. LAN 노출 검증
-CHROME_MCP_HOST=0.0.0.0 mcp-chrome-scalemaker-bridge
+CHROME_MCP_HOST=0.0.0.0 mcp-chrome-bibumhan-bridge
 # → 서버가 0.0.0.0:12306 에 listen
 ```

@@ -1,7 +1,7 @@
 {
-  "name": "chrome-mcp-scalemaker-shared",
+  "name": "chrome-mcp-bibumhan-shared",
   "version": "1.0.37",
-  "author": "hangye (upstream), scalemaker-ship-it (scalemaker fork)",
+  "author": "hangye (upstream), bibumhanpro (bibumhan fork)",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
   "types": "dist/index.d.ts",

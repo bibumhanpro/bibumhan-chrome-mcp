@@ -1,6 +1,6 @@
-# mcp-chrome-scalemaker-launcher
+# mcp-chrome-bibumhan-launcher
 
-> Chrome launcher with `--remote-debugging-port=9222` for [mcp-chrome-scalemaker](https://github.com/scalemaker-ship-it/mcp-chrome-scalemaker) Playwright CDP fallback.
+> Chrome launcher with `--remote-debugging-port=9222` for [mcp-chrome-bibumhan](https://github.com/bibumhanpro/bibumhan-chrome-mcp) Playwright CDP fallback.
 
 ## What it does
 
@@ -8,7 +8,7 @@
 2. **Detects user-data-dir** — default profile 자동 감지 → 로그인·북마크·확장 그대로
 3. **Auto-escalates CDP port** — 9222 점유 시 9223 → 9224 ... 자동 시도
 4. **Spawns Chrome** with `--remote-debugging-port` + `--restore-last-session`
-5. **Writes port file** to `~/.mcp-chrome-scalemaker/cdp-port` (bridge 가 fallback transport 진입 시 읽음)
+5. **Writes port file** to `~/.mcp-chrome-bibumhan/cdp-port` (bridge 가 fallback transport 진입 시 읽음)
 
 ## Why a separate launcher?
 
@@ -17,7 +17,7 @@
 ## Install
 
 ```bash
-npm i -g mcp-chrome-scalemaker-bridge   # bridge 가 launcher 도 의존성으로 가져옴
+npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz   # bridge 가 launcher 도 의존성으로 가져옴
 ```
 
 또는 GitHub Releases 에서 OS 별 단일 셸 다운로드.
@@ -26,16 +26,16 @@ npm i -g mcp-chrome-scalemaker-bridge   # bridge 가 launcher 도 의존성으�
 
 ```bash
 # macOS / Linux — 더블클릭 가능 (Finder)
-./bin/scalemaker-chrome.command    # macOS
-./bin/scalemaker-chrome.sh         # Linux
+./bin/bibumhan-chrome.command    # macOS
+./bin/bibumhan-chrome.sh         # Linux
 
 # Windows — 더블클릭
-bin\scalemaker-chrome.bat
+bin\bibumhan-chrome.bat
 
 # CLI 직접
-scalemaker-chrome --port=9222 --verbose
-scalemaker-chrome --start-url=https://example.com
-scalemaker-chrome --binary=/path/to/chrome --user-data-dir=/path
+bibumhan-chrome --port=9222 --verbose
+bibumhan-chrome --start-url=https://example.com
+bibumhan-chrome --binary=/path/to/chrome --user-data-dir=/path
 ```
 
 ## Output (JSON)
@@ -54,7 +54,7 @@ scalemaker-chrome --binary=/path/to/chrome --user-data-dir=/path
 
 ## How fork's Playwright transport consumes this
 
-1. user runs `scalemaker-chrome` once → CDP port written to `~/.mcp-chrome-scalemaker/cdp-port`
+1. user runs `bibumhan-chrome` once → CDP port written to `~/.mcp-chrome-bibumhan/cdp-port`
 2. bridge process 의 Playwright fallback transport 가 그 파일 읽고 `chromium.connectOverCDP(...)` 호출
 3. 같은 Chrome 인스턴스에 attach — 사용자 세션 그대로 사용
 

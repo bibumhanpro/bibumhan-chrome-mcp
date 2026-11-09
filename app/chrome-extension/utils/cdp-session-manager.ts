@@ -1,4 +1,4 @@
-import { TOOL_NAMES } from 'chrome-mcp-scalemaker-shared';
+import { TOOL_NAMES } from 'chrome-mcp-bibumhan-shared';
 
 type OwnerTag = string;
 

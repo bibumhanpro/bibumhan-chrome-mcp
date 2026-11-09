@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-29
 **Status:** approved (구현 대기)
-**Scope:** chrome-mcp-scalemaker 사용자가 troubleshooting 문제를 Claude Code 에 자연어로 말하면 자동으로 `doctor` / `--fix` / `report` 를 호출·해석하고 설정 문제 (CHROME_PORT, 강제포커스) 도 다뤄주는 SKILL.md 를 패키지에 박제 + welcome 페이지의 prompt 박스로 설치 동의 받기.
+**Scope:** chrome-mcp-bibumhan 사용자가 troubleshooting 문제를 Claude Code 에 자연어로 말하면 자동으로 `doctor` / `--fix` / `report` 를 호출·해석하고 설정 문제 (CHROME_PORT, 강제포커스) 도 다뤄주는 SKILL.md 를 패키지에 박제 + welcome 페이지의 prompt 박스로 설치 동의 받기.
 
 ---
 
@@ -26,7 +26,7 @@ app/native-server/skill/SKILL.md          ← 단일 source. 코드와 함께 gi
 
 - bridge build 시 `dist/skill/SKILL.md` 로 복사 (build.ts 에 한 줄 추가)
 - npm package 의 `files` 에 `dist` 이미 포함되어 있어 자동 publish
-- 사용자 글로벌 install 후 경로: `<npm root -g>/mcp-chrome-scalemaker-bridge/dist/skill/SKILL.md`
+- 사용자 글로벌 install 후 경로: `<npm root -g>/mcp-chrome-bibumhan-bridge/dist/skill/SKILL.md`
 
 ### 1.2 Welcome 페이지 — 새 prompt 박스 (Troubleshooting collapsible 안)
 
@@ -40,9 +40,9 @@ app/native-server/skill/SKILL.md          ← 단일 source. 코드와 함께 gi
 │                                                      │
 │ ┌──────────────────────────────────────[복사하기]┐  │
 │ │ 다음 파일을 ~/.claude/skills/                   │  │
-│ │ chrome-mcp-scalemaker-doctor/SKILL.md 로         │  │
+│ │ chrome-mcp-bibumhan-doctor/SKILL.md 로         │  │
 │ │ 복사해서 스킬로 등록해줘:                       │  │
-│ │   <npm root -g>/mcp-chrome-scalemaker-bridge/    │  │
+│ │   <npm root -g>/mcp-chrome-bibumhan-bridge/    │  │
 │ │   dist/skill/SKILL.md                           │  │
 │ │ 이후 chrome mcp 관련 문제가 생기면 이 스킬로    │  │
 │ │ 자동 진단·복구 시도해줘.                        │  │
@@ -53,9 +53,9 @@ app/native-server/skill/SKILL.md          ← 단일 source. 코드와 함께 gi
 ### 1.3 Claude Code 가 실제로 하는 일 (prompt 받은 후)
 
 1. `npm root -g` 실행 → SKILL.md 절대경로 계산
-2. `~/.claude/skills/chrome-mcp-scalemaker-doctor/` 디렉토리 생성 (`mkdir -p`)
+2. `~/.claude/skills/chrome-mcp-bibumhan-doctor/` 디렉토리 생성 (`mkdir -p`)
 3. 기존 SKILL.md 존재 시 `head -10` 으로 frontmatter 확인:
-   - 같은 name + scalemaker-version 차이 → diff 보여주고 overwrite 동의
+   - 같은 name + bibumhan-version 차이 → diff 보여주고 overwrite 동의
    - 다른 name → 사용자 custom 으로 간주, 덮지 않고 알림만
 4. 파일 복사 후 "다음에 'mcp 가 안 돼' 같은 말 하면 자동 발동" 안내
 
@@ -69,10 +69,10 @@ app/native-server/skill/SKILL.md          ← 단일 source. 코드와 함께 gi
 
 ```yaml
 ---
-name: chrome-mcp-scalemaker-doctor
+name: chrome-mcp-bibumhan-doctor
 description: |
-  Use whenever the user reports ANY problem with the chrome-mcp-scalemaker
-  MCP server. Diagnoses via `mcp-chrome-scalemaker-bridge doctor`, fixes with
+  Use whenever the user reports ANY problem with the chrome-mcp-bibumhan
+  MCP server. Diagnoses via `mcp-chrome-bibumhan-bridge doctor`, fixes with
   `--fix`, exports issue report with `report --copy`, edits .mcp.json's
   CHROME_PORT for multi-profile routing, and guides the popup's 강제 포커스
   toggle.
@@ -87,17 +87,17 @@ description: |
     - "Chrome 이 자꾸 앞으로 튀어나옴" / "강제 포커스 꺼줘" / "다른 앱 작업
        하는데 chrome 이 빼앗아감"
     - "다른 profile 인데 같은 chrome 이 잡혀" / "두 클로드 세션이 같은
-       chrome 만 호출" / "12315 로 설정했는데 12320 으로 가"
+       chrome 만 호출" / "12315 로 설정했는데 12330 으로 가"
     - "port 충돌" / "EADDRINUSE" / "PORT_CONFLICT"
     - "bridge 가 안 떠" / "native messaging error" / "manifest 못 찾음"
     - "권한 에러" / "EACCES" / "run_host.sh"
     - "강제 재연결 눌렀는데도 안 돼"
 
-  Skip if the user is using upstream hangwin/mcp-chrome (not the scalemaker
+  Skip if the user is using upstream hangwin/mcp-chrome (not the bibumhan
   fork) — this skill knows fork-specific commands and architecture.
 
 
-# scalemaker-version: <bridge version at build time>
+# bibumhan-version: <bridge version at build time>
 ---
 ```
 
@@ -125,9 +125,9 @@ popup port input + 강제포커스 토글
 
 | 증상                                 | 1st 명령                              | 후속                                          |
 | ------------------------------------ | ------------------------------------- | --------------------------------------------- |
-| 연결 안 됨 / disconnected            | `mcp-chrome-scalemaker-bridge doctor` | 빨간불 항목 보고 `--fix`                      |
+| 연결 안 됨 / disconnected            | `mcp-chrome-bibumhan-bridge doctor`   | 빨간불 항목 보고 `--fix`                      |
 | 권한 에러 / EACCES                   | `doctor --fix`                        | 안 되면 `fix-permissions` 단독                |
-| 두 클로드 세션이 같은 chrome 만 호출 | `.mcp.json` 의 `env.CHROME_PORT` 확인 | 양쪽 다른 port (12315 / 12320) 명시 후 재시작 |
+| 두 클로드 세션이 같은 chrome 만 호출 | `.mcp.json` 의 `env.CHROME_PORT` 확인 | 양쪽 다른 port (12315 / 12330) 명시 후 재시작 |
 | Chrome 이 자꾸 앞으로 튀어나옴       | popup 의 "강제 포커스" 토글 OFF       | (default 가 이미 OFF — 사용자가 켰을 가능성)  |
 | 이슈 등록                            | `report --copy`                       | 클립보드로 마크다운 → GH Issue                |
 
@@ -157,13 +157,13 @@ popup port input + 강제포커스 토글
 
 ### 2.3 트리거 정확도 — 가짜 트리거 방지
 
-- description 첫 줄에 "chrome-mcp-scalemaker" 패키지명 명시
+- description 첫 줄에 "chrome-mcp-bibumhan" 패키지명 명시
 - "Skip if upstream hangwin/mcp-chrome" line → 다른 fork 사용자에게 false trigger 안 함
-- 본문 (A) Architecture 섹션 첫 줄에 "This skill assumes you're on the scalemaker fork — verify with `mcp-chrome-scalemaker-bridge -V`"
+- 본문 (A) Architecture 섹션 첫 줄에 "This skill assumes you're on the bibumhan fork — verify with `mcp-chrome-bibumhan-bridge -V`"
 
 ### 2.4 갱신 정책 (사용자 dirty 보호)
 
-- `# scalemaker-version: 1.0.28` frontmatter comment 박제 (build 시 자동 주입)
+- `# bibumhan-version: 1.0.28` frontmatter comment 박제 (build 시 자동 주입)
 - 다음 install prompt 실행 시 Claude 가 이 라인 비교:
   - 패키지가 더 신선 → diff 보여주고 동의 받아 overwrite
   - 같음 → "이미 최신" 안내, 변경 없음
@@ -179,7 +179,7 @@ popup port input + 강제포커스 토글
 ## 구현 체크리스트 (다음 세션에서)
 
 1. `app/native-server/skill/SKILL.md` 작성 (본문 5개 섹션)
-2. `app/native-server/src/scripts/build.ts` — `dist/skill/SKILL.md` 복사 + frontmatter 의 `# scalemaker-version:` 을 package.json version 으로 치환
+2. `app/native-server/src/scripts/build.ts` — `dist/skill/SKILL.md` 복사 + frontmatter 의 `# bibumhan-version:` 을 package.json version 으로 치환
 3. `app/native-server/package.json` 의 `files` 에 `dist` 가 이미 있는지 확인 (있음 — `["dist", "!dist/node_path.txt"]`)
 4. `app/chrome-extension/entrypoints/welcome/App.vue` — Troubleshooting `<details>` 안에 새 prompt 박스 추가 (`COMMANDS` 에 새 key `installSkillPrompt` 추가)
 5. 빌드 + 양쪽 (bridge + extension) v1.0.29 로 bump + publish
@@ -191,4 +191,4 @@ popup port input + 강제포커스 토글
 
 - **postinstall 자동 설치**: 사용자 동의 없이 `~/.claude/skills/` 건드림 → 매너 위반. Claude Code 안 쓰는 사용자 (Cursor/Cline 등) 에게 쓰레기 파일.
 - **CLI `install-skill` 명령**: 그냥 파일 복사 — Claude Code 의 핀환경 동작이 아님. welcome prompt 방식이 더 자연스러움.
-- **전체 사용 가이드 (chrome_screenshot 등 도구 사용법까지) 포함**: YAGNI. 한 스킬에 너무 많은 책임 — 필요시 별도 `chrome-mcp-scalemaker-usage` 스킬로 분리 가능.
+- **전체 사용 가이드 (chrome_screenshot 등 도구 사용법까지) 포함**: YAGNI. 한 스킬에 너무 많은 책임 — 필요시 별도 `chrome-mcp-bibumhan-usage` 스킬로 분리 가능.

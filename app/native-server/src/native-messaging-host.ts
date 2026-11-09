@@ -1,7 +1,7 @@
 import { stdin, stdout } from 'process';
 import { Server } from './server';
 import { v4 as uuidv4 } from 'uuid';
-import { NativeMessageType } from 'chrome-mcp-scalemaker-shared';
+import { NativeMessageType } from 'chrome-mcp-bibumhan-shared';
 import { TIMEOUTS } from './constant';
 import fileHandler from './file-handler';
 
@@ -130,7 +130,7 @@ export class NativeMessagingHost {
     try {
       switch (message.type) {
         case NativeMessageType.START:
-          await this.startServer(message.payload?.port || 12320);
+          await this.startServer(message.payload?.port || 12330);
           break;
         case NativeMessageType.STOP:
           await this.stopServer();

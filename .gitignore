@@ -50,13 +50,13 @@ CLAUDE.md
 
 .docs/
 .claude/
-# scalemaker fork — private RSA key for deterministic extension ID (NEVER commit)
+# bibumhan fork — private RSA key for deterministic extension ID (NEVER commit)
 app/chrome-extension/.keys/
 .extension-id
 .extension-pubkey-b64
 
 # release 빌드 산출물 (gh release upload 로 별도 관리)
-chrome-mcp-scalemaker-extension.zip
+chrome-mcp-bibumhan-extension.zip
 chrome-launcher-*.tar.gz
 
 # local MCP server config (path is user-specific)

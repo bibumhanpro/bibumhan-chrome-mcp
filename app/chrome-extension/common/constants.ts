@@ -6,8 +6,8 @@
 // Native Host Configuration
 // v1.0.2 부터 fork 전용 host name + port — upstream (com.chromemcp.nativehost / 12306) 과 분리.
 export const NATIVE_HOST = {
-  NAME: 'com.chromemcpscalemaker.nativehost',
-  DEFAULT_PORT: 12320,
+  NAME: 'com.chromemcpbibumhan.nativehost',
+  DEFAULT_PORT: 12330,
 } as const;
 
 // Chrome Extension Icons

@@ -65,7 +65,7 @@ Stage A 의 ③ spawn 실패 시. native messaging host manifest 가 손상되�
 - Windows: `HKCU\Software\Google\Chrome\NativeMessagingHosts\com.chromemcp.nativehost` (registry)
 - Linux: `~/.config/google-chrome/NativeMessagingHosts/com.chromemcp.nativehost.json`
 
-수동 fix: `mcp-chrome-scalemaker-bridge install` CLI 실행 (manifest 재생성).
+수동 fix: `mcp-chrome-bibumhan-bridge install` CLI 실행 (manifest 재생성).
 
 ### Stage C — Chrome restart with launcher
 
@@ -75,7 +75,7 @@ Stage B 도 실패 시. Chrome 자체 재시작:
 # 사용자 confirm 후
 osascript -e 'quit app "Google Chrome"'  # macOS
 sleep 5
-scalemaker-chrome  # launcher 가 새 Chrome 띄움 (CDP 활성화 + Continue where you left off)
+bibumhan-chrome  # launcher 가 새 Chrome 띄움 (CDP 활성화 + Continue where you left off)
 ```
 
 Stage C 다이얼로그 UI 는 후속 PR 에서.

@@ -1,8 +1,8 @@
-# mcp-chrome-scalemaker — Fork 설계 (2026-05-25)
+# mcp-chrome-bibumhan — Fork 설계 (2026-05-25)
 
 > **상태**: 디자인 합의 완료, implementation 미착수
 > **베이스**: [hangwin/mcp-chrome](https://github.com/hangwin/mcp-chrome) `master @ commit TBD` (11.7k stars, TS/Vue monorepo)
-> **fork repo**: `scalemaker-ship-it/mcp-chrome-scalemaker` (예정, 별도 npm 패키지 + GitHub Releases 사이드로드 extension)
+> **fork repo**: `bibumhanpro/bibumhan-chrome-mcp` (예정, 별도 npm 패키지 + GitHub Releases 사이드로드 extension)
 > **brainstorming 일자**: 2026-05-25
 > **합의 결정 5개**: (1) scope = L1+L2+L3+L4 풀패키지 / (2) Playwright 진입 = Chrome Launcher 별도 / (3) Force Reconnect = A→B→C 점진 escalation / (4) Playwright 미러 = 33 도구 전체 (native-only stub) / (5) fork 위치 = GitHub 별도 repo + npm 배포
 
@@ -70,7 +70,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                       mcp-chrome-scalemaker (fork of hangwin/mcp-chrome)         │
+│                       mcp-chrome-bibumhan (fork of hangwin/mcp-chrome)         │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                 │
 │   Claude Code                                                                   │
@@ -79,7 +79,7 @@
 │      │  HTTP 12307/mcp (fallback, Playwright transport)                         │
 │      ▼                                                                          │
 │   ┌────────────────────────────────────────────┐                                │
-│   │  bridge process (mcp-chrome-scalemaker-     │                                │
+│   │  bridge process (mcp-chrome-bibumhan-     │                                │
 │   │  bridge npm pkg)                           │                                │
 │   │                                            │                                │
 │   │  ┌────────────────┐  ┌───────────────────┐ │                                │
@@ -122,7 +122,7 @@
 - **12307** = Playwright CDP 폴백 (별도 포트, 별도 transport)
 - **9222** = Chrome CDP endpoint (launcher 가 활성화)
 - Playwright 폴백은 bridge 가 살아있는 동안에도 사용자 토글로 강제 전환 가능
-- bridge process = npm 글로벌 패키지, `npm i -g mcp-chrome-scalemaker-bridge`
+- bridge process = npm 글로벌 패키지, `npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz`
 
 ---
 
@@ -164,7 +164,7 @@ master (upstream fork point)
 [branch: ingest-pr-313]   ─ #313 cherry-pick
    │
    ▼
-[branch: main-scalemaker]  ─ 모두 합본 + 회귀 8 케이스 통과
+[branch: main]  ─ 모두 합본 + 회귀 8 케이스 통과
 ```
 
 ### 회귀 8 케이스 (각 흡수 후 통과 의무)
@@ -246,7 +246,7 @@ Connect 버튼 클릭 = 항상 5단계 자동 실행. 실패 시 escalation 권�
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  Chrome MCP Server (scalemaker fork)              │
+│  Chrome MCP Server (bibumhan fork)              │
 ├──────────────────────────────────────────────────┤
 │                                                  │
 │  [  ⚡ Force Reconnect  ]   ← 메인 액션 버튼      │
@@ -292,9 +292,9 @@ Connect 버튼 클릭 = 항상 5단계 자동 실행. 실패 시 escalation 권�
 packages/chrome-launcher/
 ├── README.md                          ← 설치·사용법 + OS별 안내
 ├── bin/
-│   ├── scalemaker-chrome.command       ← macOS (더블클릭 가능)
-│   ├── scalemaker-chrome.bat           ← Windows
-│   └── scalemaker-chrome.sh            ← Linux
+│   ├── bibumhan-chrome.command       ← macOS (더블클릭 가능)
+│   ├── bibumhan-chrome.bat           ← Windows
+│   └── bibumhan-chrome.sh            ← Linux
 ├── src/
 │   ├── detect-profile.ts              ← OS 별 default Chrome user-data-dir 자동 감지
 │   ├── detect-binary.ts               ← Chrome 실행 파일 경로 감지
@@ -318,7 +318,7 @@ packages/chrome-launcher/
 2. detect-profile → user-data-dir 자동 감지
 3. ensure-port-free → 9222 점유 검사
      - 점유 X → 9222 사용
-     - 점유 O 가 mcp-chrome-scalemaker 가 띄운 거면 → 그 인스턴스 재사용 (skip launch)
+     - 점유 O 가 mcp-chrome-bibumhan 가 띄운 거면 → 그 인스턴스 재사용 (skip launch)
      - 점유 O 가 다른 거면 → 9223 → 9224... escalation
 4. spawn:
    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
@@ -327,7 +327,7 @@ packages/chrome-launcher/
        --no-first-run --no-default-browser-check \
        --restore-last-session
 5. wait for CDP endpoint ready (GET http://localhost:9222/json/version)
-6. write port to ~/.mcp-chrome-scalemaker/cdp-port (bridge 가 읽음)
+6. write port to ~/.mcp-chrome-bibumhan/cdp-port (bridge 가 읽음)
 ```
 
 ### Playwright CDP 폴백 동작
@@ -343,7 +343,7 @@ packages/chrome-launcher/
 │  on transport-failure (primary native msg) OR        │
 │  on user-toggle (UI 의 Playwright 모드 라디오):       │
 │                                                      │
-│  1. read ~/.mcp-chrome-scalemaker/cdp-port            │
+│  1. read ~/.mcp-chrome-bibumhan/cdp-port            │
 │  2. browser = await chromium.connectOverCDP(         │
 │       `http://localhost:${port}`                     │
 │     )                                                │
@@ -384,14 +384,14 @@ extension popup → "Open Diagnostic Report" 클릭 → 별창 (`chrome-extensio
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  Diagnostic Report — mcp-chrome-scalemaker                               │
+│  Diagnostic Report — mcp-chrome-bibumhan                               │
 │                                          [Copy as JSON] [Run Self-Test] │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │  ─── Environment ───                                                    │
 │   OS              macOS 14.7 (darwin arm64)                             │
 │   Chrome          Version 140.0.7339.214                                │
-│   bridge npm      mcp-chrome-scalemaker-bridge@1.2.0                     │
+│   bridge npm      mcp-chrome-bibumhan-bridge@1.2.0                     │
 │   extension       1.2.0 (matched ✅)                                    │
 │                                                                         │
 │  ─── Processes ───                                                      │
@@ -440,7 +440,7 @@ extension popup → "Open Diagnostic Report" 클릭 → 별창 (`chrome-extensio
 
 ```json
 {
-  "fork": "mcp-chrome-scalemaker@1.2.0",
+  "fork": "mcp-chrome-bibumhan@1.2.0",
   "env": { "os": "darwin", "arch": "arm64", "chrome": "140.0.7339.214" },
   "processes": { "bridge": { "pid": 12345, "uptime_s": 192 } },
   "ports": { "12306": "bridge", "12307": null, "9222": "chrome" },
@@ -464,18 +464,18 @@ extension popup → "Open Diagnostic Report" 클릭 → 별창 (`chrome-extensio
 
 ### 배포 방식 매트릭스
 
-| 컴포넌트             | 배포 채널                                                                | 사용자 설치 방법                                                                                   |
-| -------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| **bridge** (npm pkg) | npm registry — `mcp-chrome-scalemaker-bridge`                            | `npm i -g mcp-chrome-scalemaker-bridge` (원본과 충돌 X, 패키지명 다름)                             |
-| **extension**        | ❌ Chrome Web Store 사용 안 함 (정책상 fork reject 위험 + 검수 2주 지연) | ✅ GitHub Releases 의 `.zip` → unpacked 사이드로드 (chrome://extensions 개발자모드 ON → 폴더 로드) |
-| **chrome-launcher**  | GitHub Releases 의 OS별 단일 셸                                          | macOS `.command` 더블클릭 / Windows `.bat` 더블클릭                                                |
+| 컴포넌트             | 배포 채널                                                                | 사용자 설치 방법                                                                                                                                           |
+| -------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **bridge** (npm pkg) | npm registry — `mcp-chrome-bibumhan-bridge`                              | `npm install -g https://github.com/bibumhanpro/bibumhan-chrome-mcp/releases/latest/download/mcp-chrome-bibumhan-bridge.tgz` (원본과 충돌 X, 패키지명 다름) |
+| **extension**        | ❌ Chrome Web Store 사용 안 함 (정책상 fork reject 위험 + 검수 2주 지연) | ✅ GitHub Releases 의 `.zip` → unpacked 사이드로드 (chrome://extensions 개발자모드 ON → 폴더 로드)                                                         |
+| **chrome-launcher**  | GitHub Releases 의 OS별 단일 셸                                          | macOS `.command` 더블클릭 / Windows `.bat` 더블클릭                                                                                                        |
 
 → 사용자 1회 셋업 = (1) `npm i -g ...` + (2) GitHub zip 다운로드해서 extension 폴더 로드 + (3) launcher 다운로드. 5분 미만.
 
 ### Repo 초기 구조
 
 ```
-mcp-chrome-scalemaker/                       ← scalemaker-ship-it/mcp-chrome-scalemaker
+mcp-chrome-bibumhan/                       ← bibumhanpro/bibumhan-chrome-mcp
 ├── README.md                               ← fork 의 motivation + 5 fix + 진입 방법
 ├── UPSTREAM_DIFF.md                        ← 우리 fork 가 upstream 대비 추가한 6 카테고리 명세
 ├── app/
@@ -516,7 +516,7 @@ semver `MAJOR.MINOR.PATCH` 의 `MAJOR` 를 upstream 추적용으로 활용:
 
 1. upstream-check.yml 이 매주 화요일 실행:
    - git fetch upstream master
-   - upstream..origin/main-scalemaker diff > UPSTREAM_DIFF.report
+   - upstream..origin/main diff > UPSTREAM_DIFF.report
    - 우리가 흡수한 PR (#346, #312, ...) 가 upstream 에 머지됐는지 확인
    - 머지 발견 → GitHub issue 자동 생성 ("PR #346 merged upstream — retire our cherry-pick")
 
@@ -540,14 +540,14 @@ on:
 jobs:
   publish:
     - pnpm install + pnpm build
-    - npm publish (mcp-chrome-scalemaker-bridge, with --provenance)
+    - npm publish (mcp-chrome-bibumhan-bridge, with --provenance)
     - extension zip + chrome-launcher tarball → GitHub Release attach
     - self-test 8 회귀 → fail 시 release abort
 ```
 
 ---
 
-## 7. mcp-chrome (원본) vs mcp-chrome-scalemaker (fork) 패치 비교표
+## 7. mcp-chrome (원본) vs mcp-chrome-bibumhan (fork) 패치 비교표
 
 ### 7.1 흡수한 기존 PR 7개 — root cause fix (모두 OPEN 인 채 upstream 머지 안 됨)
 
@@ -628,8 +628,8 @@ jobs:
 
 본 디자인이 합의된 상태이므로, implementation 단계로 넘어갈 때:
 
-1. **별도 worktree 생성** — `superpowers:using-git-worktrees` 활용해서 본 vault (`claude_lecture`) 와 격리. fork repo 는 `~/projects/mcp-chrome-scalemaker/` 같은 별도 위치
-2. **upstream fork 떠서 베이스라인 commit hash 픽스** — `gh repo fork hangwin/mcp-chrome --clone --remote --org scalemaker-ship-it` (또는 본인 계정)
+1. **별도 worktree 생성** — `superpowers:using-git-worktrees` 활용해서 본 vault (`claude_lecture`) 와 격리. fork repo 는 `~/projects/mcp-chrome-bibumhan/` 같은 별도 위치
+2. **upstream fork 떠서 베이스라인 commit hash 픽스** — `gh repo fork hangwin/mcp-chrome --clone --remote --org bibumhanpro` (또는 본인 계정)
 3. **`superpowers:writing-plans` 로 implementation plan 작성** — 본 디자인의 L1→L2→L3→L4→L5 순서로 step-by-step plan
 4. **회귀 8 케이스 + Self-Test 인프라 먼저 구축** — TDD 원칙 (`superpowers:test-driven-development`)
 5. **L1 흡수 7 PR 부터 시작** — 각 PR cherry-pick 마다 회귀 통과 확인

@@ -10,13 +10,13 @@ import IconsResolver from 'unplugin-icons/resolver';
 config({ path: resolve(process.cwd(), '.env') });
 config({ path: resolve(process.cwd(), '.env.local') });
 
-// scalemaker fork: deterministic extension ID via embedded public key.
-// 모든 사용자가 같은 ID (aogfhfajjknomcnmlkbjmihjbknlhbbi) 받음 → unpacked load 시에도
+// bibumhan fork: deterministic extension ID via embedded public key.
+// 모든 사용자가 같은 ID (jcefkfpcolbkdbpgbgohgmdhkkknfhbn) 받음 → unpacked load 시에도
 // allowed_origins 가 자동으로 일치 → 사용자는 install 시 manual extension-id 입력 불요.
 // 사실상 upstream 의 Chrome Web Store ID 고정과 같은 효과.
-const SCALEMAKER_EXTENSION_PUB_KEY =
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy71LoDpSDPA1gPKS+qXDh+aMaWTBmg4D5Uy8/nwm8V4msV8a4ODvWJXTtvysFbz8HDkSgfJeTtzmr9GibAIZG2uc1HHzR1XaDrT/dDjUd4QaogaXbWitQHVaAQyX2bvoazYh41DE4TzkRwTr8/Z3TrAO2rHqpv9KCJilyhuw8GCdhkbjIcoRLX0XFM+tQsPtwrN3riCWClG2MY/KqOBSExRTC17mYo0OPVXzR2GlpwLXImr9URLiHCEl1g0mGZsEYnsyzk2JnImm+5FmihcWPhqR/bgwtkjpIMpDm+HcEaj7ruX/2wYUz5BMt6/pqv6OvWsk/afZg1y5D1wAj+r+GwIDAQAB';
-const CHROME_EXTENSION_KEY = process.env.CHROME_EXTENSION_KEY || SCALEMAKER_EXTENSION_PUB_KEY;
+const BIBUMHAN_EXTENSION_PUB_KEY =
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0NsdiyTf5KSk1kpPgdg4QLFajJnWXLNNDxdXCtNA/ezOLRDMvXxBCUXtigTbV06A6UKrpWXFUcUgeF4X3HPR19xKZMUfAeVLlRoEKoLRbwGM6ogq7RrkZtQinPqZNn+0moEjYgWHQy5YssPjQ6BvfhCa5nZg2+qbAppNOgp148rUAKK4xpL/0so/qQiNOphv/dhpwnXwZA+s0v1n61R4MMzodpzF6Rx+YStv3WbP1gE3Ume5/QXt/u1x/b7TfWgjaLY4SIOADQsg7JVBb+p6rp8dBevPQCfd5HOWFUod81xav8e0RRvcyhqHU7BqNeBlmdbkscVRk+AivXZUYa8bxQIDAQAB';
+const CHROME_EXTENSION_KEY = process.env.CHROME_EXTENSION_KEY || BIBUMHAN_EXTENSION_PUB_KEY;
 // Detect dev mode early for manifest-level switches
 const IS_DEV = process.env.NODE_ENV !== 'production' && process.env.MODE !== 'production';
 
